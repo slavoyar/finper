@@ -1,7 +1,6 @@
 {
   "plugins": ["prettier-plugin-tailwindcss"],
   "endOfLine": "lf",
-  "jsxSingleQuote": true,
   "printWidth": 110,
   "proseWrap": "never",
   "quoteProps": "as-needed",
