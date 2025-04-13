@@ -1,7 +1,6 @@
 import { BondModule } from '@modules/bond/bond.module';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { ScheduleModule } from '@nestjs/schedule';
 
 import { BotController } from './bot.controller';
 import { BotService } from './bot.service';
@@ -10,7 +9,8 @@ import { TelegramService } from './telegram/telegram.service';
 import { TelegramCronService } from './telegram/telegram-cron.service';
 
 @Module({
-  imports: [HttpModule, ScheduleModule.forRoot(), BondModule],
+  imports: [HttpModule, BondModule],
+  // TODO: Run telegram cron service only in dev mode
   providers: [BotService, CommandFactory, TelegramService, TelegramCronService],
   controllers: [BotController],
 })

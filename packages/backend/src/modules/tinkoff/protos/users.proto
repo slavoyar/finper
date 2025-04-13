@@ -10,7 +10,6 @@ option objc_class_prefix = "TIAPI";
 option php_namespace = "Tinkoff\\Invest\\V1";
 
 import "google/protobuf/timestamp.proto";
-import "google/api/field_behavior.proto";
 import "common.proto";
 
 service UsersService { /*С помощью сервиса можно получить: <br/> 1.

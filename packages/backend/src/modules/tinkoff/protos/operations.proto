@@ -11,7 +11,6 @@ option php_namespace = "Tinkoff\\Invest\\V1";
 
 import "google/protobuf/timestamp.proto";
 import "common.proto";
-import "google/api/field_behavior.proto";
 
 service OperationsService {/*С помощью методов сервиса можно получить:<br/><br/> **1**. Список операций по счету.<br/> **2**.
                               Портфель по счету.<br/> **3**. Позиции ценных бумаг на счете.<br/> **4**.
