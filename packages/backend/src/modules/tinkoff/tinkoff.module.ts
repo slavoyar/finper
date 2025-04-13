@@ -10,7 +10,7 @@ import { join } from 'path';
         name: 'INSTRUMENTS_PACKAGE',
         transport: Transport.GRPC,
         options: {
-          package: 'instruments',
+          package: 'tinkoff.public.invest.api.contract.v1',
           protoPath: join(__dirname, './protos/instruments.proto'),
           loader: { includeDirs: [join(__dirname, './protos')] },
         },
@@ -19,7 +19,7 @@ import { join } from 'path';
         name: 'ORDERS_PACKAGE',
         transport: Transport.GRPC,
         options: {
-          package: 'orders',
+          package: 'tinkoff.public.invest.api.contract.v1',
           protoPath: join(__dirname, './protos/orders.proto'),
           loader: { includeDirs: [join(__dirname, './protos')] },
         },

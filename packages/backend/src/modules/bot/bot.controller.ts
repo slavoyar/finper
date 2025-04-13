@@ -1,10 +1,13 @@
-import { ValidateBody } from '@common/decorators/validation';
-import { Controller } from '@nestjs/common';
+import { Body, Controller } from '@nestjs/common';
+
+import { BotService } from './bot.service';
+import { Update } from './telegram';
 
 @Controller('bot')
 export class BotController {
-  test(@ValidateBody({}) body: { userId: string }) {
-    body.userId;
-    console.log('test');
+  constructor(private botService: BotService) {}
+
+  public async handleMessage(@Body() body: Update) {
+    await this.botService.handleUpdate(body);
   }
 }

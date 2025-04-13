@@ -14,10 +14,19 @@ export interface ReplyKeyboardMarkup {
   selective?: boolean;
 }
 
+export interface InlineKeyboardButton {
+  text: string;
+  callback_data?: string;
+}
+
+export interface InlineKeyboardMarkup {
+  inline_keyboard: InlineKeyboardButton[][];
+}
+
 export interface MessageResponse {
   chat_id: number | string;
   text: string;
   parse_mode?: string;
   entities?: MessageEntity[];
-  reply_markup?: ReplyKeyboardMarkup;
+  reply_markup?: ReplyKeyboardMarkup | InlineKeyboardMarkup;
 }
