@@ -1,8 +1,5 @@
-import {
-  createParamDecorator,
-  ExecutionContext,
-  BadRequestException,
-} from '@nestjs/common';
+import { BadRequestException, createParamDecorator, ExecutionContext } from '@nestjs/common';
+
 import ajv from '../ajv.instance';
 
 export function ValidateBody(schema: object) {

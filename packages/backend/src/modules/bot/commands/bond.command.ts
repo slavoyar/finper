@@ -11,18 +11,6 @@ export class BondCommand extends BaseCommand implements ICommand {
   }
 
   public override async execute(context: CommandContext): Promise<CommandResult> {
-    const presets = await this.bondService.getPresets();
-
-    if (presets.length > 0) {
-      return Promise.resolve({
-        message: {
-          chat_id: context.chatId,
-          text: 'Выберите пресет для получения списка облигаций',
-          reply_markup: this.constructInlineKeyboardMarkup(presets),
-        },
-      });
-    }
-
     const listBuilder = new ListBuilder<{ name: string; description: string }>(
       'Список облигаций',
       [],

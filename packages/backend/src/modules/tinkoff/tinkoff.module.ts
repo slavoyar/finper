@@ -18,12 +18,12 @@ import { join } from 'path';
         },
       },
       {
-        name: 'ORDERS_CLIENT',
+        name: 'MARKETDATA_CLIENT',
         transport: Transport.GRPC,
         options: {
           url: 'invest-public-api.tinkoff.ru:443',
           package: 'tinkoff.public.invest.api.contract.v1',
-          protoPath: join(__dirname, './protos/orders.proto'),
+          protoPath: join(__dirname, './protos/marketdata.proto'),
           loader: { includeDirs: [join(__dirname, './protos')] },
           credentials: credentials.createSsl(),
         },
