@@ -1,11 +1,11 @@
+import { TelegramService } from '@external/telegram/telegram.service';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
-import { BotService } from '../bot.service';
-import { TelegramService } from './telegram.service';
+import { BotService } from './bot.service';
 
 @Injectable()
-export class TelegramCronService {
+export class BotCronService {
   private offset: number;
 
   constructor(

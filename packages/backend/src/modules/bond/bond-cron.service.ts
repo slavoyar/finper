@@ -1,7 +1,7 @@
 import { dateToTimestamp } from '@common/utils';
+import { tinkoff as TinkoffInstruments } from '@external/tinkoff/protos/instruments';
+import { tinkoff as TinkoffMarketData } from '@external/tinkoff/protos/marketdata';
 import { Metadata } from '@grpc/grpc-js';
-import { tinkoff as TinkoffInstruments } from '@modules/tinkoff/protos/instruments';
-import { tinkoff as TinkoffMarketData } from '@modules/tinkoff/protos/marketdata';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientGrpc } from '@nestjs/microservices';

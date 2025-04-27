@@ -4,7 +4,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "generate:proto": "tsproto --path ./src/modules/tinkoff/protos --include node_modules/google-proto-files && sed -i 's/export namespace public/export namespace _public/g' ./src/modules/tinkoff/protos/*.ts",
+    "generate:proto": "tsproto --path ./src/external/tinkoff/protos --include node_modules/google-proto-files && sed -i 's/export namespace public/export namespace _public/g' ./src/external/tinkoff/protos/*.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
