@@ -1,9 +1,9 @@
+import { CallbackQuery, Message, Update } from '@external/telegram/interfaces';
+import { TelegramService } from '@external/telegram/telegram.service';
 import { Injectable } from '@nestjs/common';
 
 import { CommandFactory } from './commands/command.factory';
 import { CommandName, CommandResult, ICommand } from './commands/command.interface';
-import { CallbackQuery, Message, Update } from './telegram';
-import { TelegramService } from './telegram/telegram.service';
 
 @Injectable()
 export class BotService {

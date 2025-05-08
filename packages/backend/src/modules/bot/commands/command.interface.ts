@@ -1,4 +1,4 @@
-import { MessageResponse } from '../telegram';
+import { MessageResponse } from '@external/telegram/interfaces';
 
 export interface CommandResult {
   message: MessageResponse;

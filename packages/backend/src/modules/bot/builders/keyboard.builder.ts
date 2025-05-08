@@ -1,4 +1,4 @@
-import { InlineKeyboardButton } from '../telegram';
+import { InlineKeyboardButton } from '@external/telegram/interfaces';
 
 export class KeyboardBuilder {
   private rows: InlineKeyboardButton[][] = [];

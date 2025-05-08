@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
 
-import { MessageResponse } from './message.response';
-import { Update } from './update';
+import { MessageResponse, Update } from './interfaces';
 
 @Injectable()
 export class TelegramService {

@@ -1,5 +1,5 @@
 import { moneyValueToSchemaMoneyValue, timestampToDate } from '@common/utils';
-import { tinkoff } from '@modules/tinkoff/protos/instruments';
+import { tinkoff } from '@external/tinkoff/protos/instruments';
 import { Coupon } from '@prisma/client';
 
 export const couponMapper = (coupon: tinkoff._public.invest.api.contract.v1.Coupon): Coupon => {

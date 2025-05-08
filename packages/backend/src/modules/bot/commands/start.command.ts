@@ -1,4 +1,5 @@
-import { InlineKeyboardMarkup } from '../telegram';
+import { InlineKeyboardMarkup } from '@external/telegram/interfaces';
+
 import { BaseCommand } from './base.command';
 import { CommandContext, CommandResult, ICommand } from './command.interface';
 

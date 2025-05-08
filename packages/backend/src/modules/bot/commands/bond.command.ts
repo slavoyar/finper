@@ -1,7 +1,7 @@
+import { InlineKeyboardMarkup } from '@external/telegram/interfaces';
 import { BondService } from '@modules/bond/bond.service';
 
 import { ListBuilder } from '../builders/list.builder';
-import { InlineKeyboardMarkup } from '../telegram';
 import { BaseCommand } from './base.command';
 import { CommandContext, CommandResult, ICommand } from './command.interface';
 

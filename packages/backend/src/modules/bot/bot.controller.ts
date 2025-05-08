@@ -1,7 +1,7 @@
+import { Update } from '@external/telegram/interfaces';
 import { Body, Controller } from '@nestjs/common';
 
 import { BotService } from './bot.service';
-import { Update } from './telegram';
 
 @Controller('bot')
 export class BotController {

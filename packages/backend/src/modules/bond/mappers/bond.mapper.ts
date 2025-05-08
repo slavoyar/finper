@@ -4,7 +4,7 @@ import {
   sanitizeUnits,
   timestampToDate,
 } from '@common/utils';
-import { tinkoff } from '@modules/tinkoff/protos/instruments';
+import { tinkoff } from '@external/tinkoff/protos/instruments';
 import { Bond } from '@prisma/client';
 
 export const bondMapper = (bond: tinkoff._public.invest.api.contract.v1.Bond): Omit<Bond, 'id'> => {

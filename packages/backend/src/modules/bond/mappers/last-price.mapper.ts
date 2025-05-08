@@ -1,5 +1,5 @@
-import { timestampToDate } from '@common/utils';
-import { tinkoff as TinkoffMarketData } from '@modules/tinkoff/protos/marketdata';
+import { moneyValueToSchemaMoneyValue, timestampToDate } from '@common/utils';
+import { tinkoff as TinkoffMarketData } from '@external/tinkoff/protos/marketdata';
 import { LastPrice } from '@prisma/client';
 
 export const lastPriceMapper = (
@@ -7,9 +7,7 @@ export const lastPriceMapper = (
 ): LastPrice => {
   return {
     figi: lastPrice.figi ?? null,
-    price: lastPrice.price
-      ? { nano: lastPrice.price.nano ?? null, units: lastPrice.price.units ?? null }
-      : null,
+    price: moneyValueToSchemaMoneyValue(lastPrice.price),
     time: timestampToDate(lastPrice.time),
     instrumentUid: lastPrice.instrumentUid ?? null,
     lastPriceType: lastPrice.lastPriceType ?? null,

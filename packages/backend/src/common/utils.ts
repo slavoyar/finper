@@ -1,4 +1,4 @@
-import { google, tinkoff } from '@modules/tinkoff/protos/common';
+import { google, tinkoff } from '@external/tinkoff/protos/common';
 import { MoneyValue, Quotation } from '@prisma/client';
 
 export async function delay(ms: number): Promise<void> {
