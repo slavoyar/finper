@@ -70,5 +70,6 @@ export const bondMapper = (bond: tinkoff._public.invest.api.contract.v1.Bond): O
     brand: null,
     lastPrice: null,
     coupons: [],
+    yield: null,
   };
 };

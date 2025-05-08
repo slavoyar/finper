@@ -56,3 +56,10 @@ export function sanitizeUnits(units?: { low: number; high: number; unsigned: boo
   const result = high * 2 ** 32 + (low >>> 0);
   return unsigned ? result : result | 0;
 }
+
+export function quotationToNumber(quotation?: Quotation | null): number | null {
+  if (!quotation) {
+    return null;
+  }
+  return (quotation.units || 0) + (quotation.nano || 0) / 1e9;
+}

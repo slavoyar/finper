@@ -19,6 +19,7 @@
     "prisma:generate": "prisma generate --schema ./src/common/prisma/schema.prisma"
   },
   "dependencies": {
+    "@investments/shared": "*",
     "@grpc/grpc-js": "^1.13.3",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^11.0.1",

@@ -1,4 +1,4 @@
-import { dateToTimestamp } from '@common/utils';
+import { dateToTimestamp, quotationToNumber } from '@common/utils';
 import { tinkoff as TinkoffInstruments } from '@external/tinkoff/protos/instruments';
 import { tinkoff as TinkoffMarketData } from '@external/tinkoff/protos/marketdata';
 import { Metadata } from '@grpc/grpc-js';
@@ -56,12 +56,17 @@ export class BondCronService {
 
     await this.bondService.updateCoupons(coupons);
 
+    console.log('Updating yield to maturity...');
+
+    await this.updateYields();
+
     console.log('Bonds updated');
   }
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   public async updateBondPrices() {
-    const bonds = await this.getBonds();
+    console.log('Updating bond prices...');
+    const bonds = await this.bondService.getBonds();
 
     const response = await firstValueFrom(
       this.marketdataService.getLastPrices(
@@ -75,6 +80,12 @@ export class BondCronService {
     const convertedLastPrices = response.lastPrices?.map((lastPrice) => lastPriceMapper(lastPrice)) ?? [];
 
     await this.bondService.updatePrices(convertedLastPrices);
+
+    console.log('Updating yield to maturity...');
+
+    await this.updateYields();
+
+    console.log('Bond prices updated');
   }
 
   private async getBonds(): Promise<Omit<Bond, 'id'>[]> {
@@ -101,9 +112,10 @@ export class BondCronService {
     let startTime: Date;
 
     const result: { uid: string; coupons: Coupon[] }[] = [];
+    let bondIndex = 1;
     for (const bond of filteredBonds) {
       startTime = new Date();
-      console.log(`Fetching coupons for ${bond.name}...`);
+      console.log(`[${bondIndex}/${filteredBonds.length}]Fetching coupons for ${bond.name}...`);
       const response = await firstValueFrom(
         this.instrumentsService.getBondCoupons(
           {
@@ -121,8 +133,42 @@ export class BondCronService {
       const timeout = timePerRequest - (new Date().getTime() - startTime.getTime()) / 1000;
 
       await new Promise((resolve) => setTimeout(resolve, (timeout < 0 ? 0 : timeout) * 1000));
+
+      bondIndex++;
     }
 
     return result;
+  }
+
+  private async updateYields() {
+    const bonds = await this.bondService.getBonds();
+    const result: { uid: string; ytm: number }[] = [];
+    for (const bond of bonds) {
+      if (!bond.maturityDate) {
+        continue;
+      }
+      const nominal = quotationToNumber(bond.nominal);
+      let lastPrice = quotationToNumber(bond.lastPrice?.price);
+      const accumulatedCoupon = quotationToNumber(bond.aciValue);
+
+      if (!nominal || !lastPrice || accumulatedCoupon === null) {
+        continue;
+      }
+      lastPrice = (lastPrice / 100) * nominal;
+
+      const couponProfit =
+        bond.coupons.reduce((acc, coupon) => {
+          return acc + quotationToNumber(coupon.payOneBond)!;
+        }, 0) - accumulatedCoupon;
+
+      const priceProfit = nominal - lastPrice;
+
+      const daysLeft = (bond.maturityDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24);
+      const ytm = (couponProfit + priceProfit) / lastPrice / (daysLeft / 365.25);
+
+      result.push({ uid: bond.uid, ytm });
+    }
+
+    await this.bondService.updateYieldToMaturity(result);
   }
 }

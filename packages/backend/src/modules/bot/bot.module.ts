@@ -7,13 +7,13 @@ import { Module } from '@nestjs/common';
 
 import { BotController } from './bot.controller';
 import { BotService } from './bot.service';
-import { BotCronService } from './bot-cron.service';
 import { CommandFactory } from './commands/command.factory';
 
 @Module({
   imports: [HttpModule, BondModule, TelegramModule],
   // TODO: Run bot cron service only in dev mode
-  providers: [BotService, CommandFactory, BotCronService, TelegramService, BondService],
+  // providers: [BotService, CommandFactory, BotCronService, TelegramService, BondService],
+  providers: [BotService, CommandFactory, TelegramService, BondService],
   controllers: [BotController],
 })
 export class BotModule {}

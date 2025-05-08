@@ -78,6 +78,8 @@ model Bond {
   lastPrice               LastPrice?
 
   coupons                 Coupon[]
+
+  yield                   Float?
 }
 
 type Quotation {

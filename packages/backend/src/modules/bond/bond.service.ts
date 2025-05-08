@@ -14,7 +14,7 @@ export class BondService {
     const ops = bonds.map((bond) =>
       this.prismaService.bond.upsert({
         where: { uid: bond.uid },
-        update: bond,
+        update: { ...bond, coupons: undefined, lastPrice: undefined },
         create: bond,
       })
     );
@@ -46,6 +46,19 @@ export class BondService {
           },
         })
       );
+
+    await this.prismaService.$transaction(operations);
+  }
+
+  async updateYieldToMaturity(ytm: { uid: string; ytm: number }[]) {
+    const operations = ytm.map(({ uid, ytm }) =>
+      this.prismaService.bond.update({
+        where: { uid },
+        data: {
+          yield: ytm,
+        },
+      })
+    );
 
     await this.prismaService.$transaction(operations);
   }
