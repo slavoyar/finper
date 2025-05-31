@@ -40,7 +40,7 @@ export class BondCronService {
   }
 
   @Cron('0 2 * * *', { timeZone: 'Europe/Moscow' })
-  public async updateBonds() {
+  public async updateBonds(offset = 0) {
     console.log('Updating bonds...');
     const bonds = await this.getBonds();
 
@@ -50,11 +50,14 @@ export class BondCronService {
 
     console.log('Updating coupons...');
 
-    const coupons = await this.getCoupons(bonds);
+    for (let i = offset; i < bonds.length; i += REQUEST_LIMIT) {
+      const slice = bonds.slice(i, i + REQUEST_LIMIT);
+      const coupons = await this.getCoupons(slice);
 
-    console.log(`Updating ${coupons.length} coupons...`);
+      console.log(`Updating ${i} to ${i + REQUEST_LIMIT} coupons...`);
 
-    await this.bondService.updateCoupons(coupons);
+      await this.bondService.updateCoupons(coupons);
+    }
 
     console.log('Updating yield to maturity...');
 

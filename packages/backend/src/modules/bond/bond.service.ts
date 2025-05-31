@@ -7,7 +7,13 @@ export class BondService {
   constructor(private prismaService: PrismaService) {}
 
   getBonds() {
-    return this.prismaService.bond.findMany();
+    return this.prismaService.bond.findMany({
+      where: {
+        NOT: {
+          amortizationFlag: true,
+        },
+      },
+    });
   }
 
   async updateOrInsertBonds(bonds: Omit<Bond, 'id'>[]) {
