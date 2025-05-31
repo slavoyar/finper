@@ -16,6 +16,14 @@ declare module 'vue' {
     ARadioGroup: (typeof import('ant-design-vue'))['RadioGroup'];
     ASpin: (typeof import('ant-design-vue'))['Spin'];
     ATooltip: (typeof import('ant-design-vue'))['Tooltip'];
+    AList: (typeof import('ant-design-vue'))['List'];
+    AListItem: (typeof import('ant-design-vue'))['ListItem'];
+    ACard: (typeof import('ant-design-vue'))['Card'];
+    ATypography: (typeof import('ant-design-vue'))['Typography'];
+    ATypographyTitle: (typeof import('ant-design-vue'))['TypographyTitle'];
+    ATypographyParagraph: (typeof import('ant-design-vue'))['TypographyParagraph'];
+    ATypographyText: (typeof import('ant-design-vue'))['TypographyText'];
+    ATypographyLink: (typeof import('ant-design-vue'))['TypographyLink'];
     // Add more components here as needed
   }
 }

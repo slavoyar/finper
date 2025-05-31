@@ -11,10 +11,9 @@ export const useBondsStore = defineStore('bonds', () => {
 
   const fetchBonds = async () => {
     const rawBonds = (await baseStore.makeRequest(bondsService.fetchBonds())) ?? [];
-    rawBonds.sort((a, b) => a.yield ?? 0 - (b.yield ?? 0));
-    bonds.value = rawBonds.filter(
-      (bond) => bond.maturityDate > new Date().toISOString() && bond.yield && bond.yield > 0
-    );
+    bonds.value = rawBonds
+      .filter((bond) => bond.maturityDate > new Date().toISOString() && bond.yield && bond.yield > 0)
+      .sort((a, b) => (b.yield ?? 0) - (a.yield ?? 0));
   };
 
   return {

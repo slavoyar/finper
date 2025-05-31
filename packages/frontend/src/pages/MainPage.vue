@@ -1,7 +1,11 @@
 <template>
-  <BondsTable />
+  <BondsList v-if="isMobile" />
+  <BondsTable v-else />
 </template>
 
 <script setup lang="ts">
-import { BondsTable } from '@entities/bonds';
+import { BondsList, BondsTable } from '@entities/bonds';
+import { useIsMobile } from '@shared/composabes/useIsMobile';
+
+const isMobile = useIsMobile();
 </script>
