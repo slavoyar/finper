@@ -1,5 +1,7 @@
 <template>
-  <h1>main</h1>
+  <BondsTable />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { BondsTable } from '@entities/bonds';
+</script>
