@@ -2,8 +2,9 @@
   <ATable
     :loading="bondStore.isLoading"
     :columns="columns"
-    :data-source="bondStore.bonds"
+    :data-source="filteredSortedBonds"
     :row-key="(record) => record.id"
+    @change="onTableChange"
   >
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'name'">
@@ -15,37 +16,38 @@
         >
           {{ record.name }}
         </a>
-      </template>
+      </template> </template
+    >a
+    <template #customFilterDropdown>
+      <DurationFilter v-model:minDuration="minDuration" v-model:maxDuration="maxDuration" />
+    </template>
+    <template #customFilterIcon>
+      <FilterFilled :style="{ color: minDuration || maxDuration ? '#108ee9' : undefined }" />
     </template>
   </ATable>
 </template>
 
 <script lang="ts" setup>
-import { TableColumnType } from 'ant-design-vue';
-import { useBondsStore } from '../model';
 import { onMounted } from 'vue';
+import { TableColumnType } from 'ant-design-vue';
+import { FilterValue, SorterResult } from 'ant-design-vue/es/table/interface';
+
+import { toRef } from '@vueuse/core';
+import { FilterFilled } from '@ant-design/icons-vue';
 import { BondDto } from '@investments/shared';
 
+import DurationFilter from './DurationFilter.vue';
+import { riskTypeByLevel, useBondsStore, useFilters } from '../model';
+import { getDuration } from '../utils';
+
 const bondStore = useBondsStore();
+const bonds = toRef(bondStore, 'bonds');
+const { selectedRisks, sortField, sortOrder, minDuration, maxDuration, filteredSortedBonds } =
+  useFilters(bonds);
 
 onMounted(() => {
   bondStore.fetchBonds();
 });
-
-const getDuration = (maturityDate: string) => {
-  const date = new Date(maturityDate);
-  const now = new Date();
-  const diff = date.getTime() - now.getTime();
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-  const months = Math.floor(days / 30);
-  return months > 0 ? `${months} months` : `${days} days`;
-};
-
-const riskTypeByLevel: Record<number, string> = {
-  1: 'Low',
-  2: 'Medium',
-  3: 'High',
-};
 
 const columns: TableColumnType<BondDto>[] = [
   {
@@ -72,8 +74,7 @@ const columns: TableColumnType<BondDto>[] = [
         value: 3,
       },
     ],
-    onFilter: (value, record) => record.riskLevel === value,
-    defaultFilteredValue: [1],
+    defaultFilteredValue: ['1'],
     customRender: ({ value }) => riskTypeByLevel[value],
   },
   {
@@ -86,15 +87,29 @@ const columns: TableColumnType<BondDto>[] = [
     title: 'Yield',
     dataIndex: 'yield',
     key: 'yield',
-    sorter: (a, b) => Number(a.yield ?? 0) - Number(b.yield ?? 0),
+    sorter: true,
     defaultSortOrder: 'descend',
     customRender: ({ value }) => `${(value * 100).toFixed(2)} %`,
   },
   {
     title: 'Duration',
     key: 'duration',
-    sorter: (a, b) => a.maturityDate.localeCompare(b.maturityDate),
+    sorter: true,
+    customFilterDropdown: true,
+    onFilterDropdownOpenChange: (visible) => console.log(visible),
     customRender: ({ record }) => getDuration(record.maturityDate),
   },
 ];
+
+const onTableChange = (
+  _: unknown,
+  filters: Record<string, FilterValue>,
+  sorter: SorterResult | SorterResult[]
+) => {
+  selectedRisks.value = (filters.risk as number[]) ?? [];
+  if (!Array.isArray(sorter)) {
+    sortField.value = sorter.columnKey as 'yield' | 'duration';
+    sortOrder.value = sorter.order as 'ascend' | 'descend';
+  }
+};
 </script>
