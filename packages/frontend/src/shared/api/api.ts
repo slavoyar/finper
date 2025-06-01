@@ -60,7 +60,7 @@ export class ApiClient {
         : response.text();
     }) as CancellablePromise<T>;
 
-    const cancellablePromise = fetchPromise as CancellablePromise<T>;
+    const cancellablePromise = fetchPromise;
     cancellablePromise.cancel = () => {
       controller.abort();
       this.ongoingRequests.delete(key);

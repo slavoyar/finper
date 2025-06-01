@@ -1,8 +1,9 @@
 import { BondDto } from '@investments/shared';
+import { useBaseStore } from '@shared/store';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+
 import { bondsService } from '../api';
-import { useBaseStore } from '@shared/store';
 
 export const useBondsStore = defineStore('bonds', () => {
   const baseStore = useBaseStore();

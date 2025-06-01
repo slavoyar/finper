@@ -19,7 +19,7 @@
       </template> </template
     >a
     <template #customFilterDropdown>
-      <DurationFilter v-model:minDuration="minDuration" v-model:maxDuration="maxDuration" />
+      <DurationFilter v-model:min-duration="minDuration" v-model:max-duration="maxDuration" />
     </template>
     <template #customFilterIcon>
       <FilterFilled :style="{ color: minDuration || maxDuration ? '#108ee9' : undefined }" />
@@ -28,17 +28,16 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue';
-import { TableColumnType } from 'ant-design-vue';
-import { FilterValue, SorterResult } from 'ant-design-vue/es/table/interface';
-
-import { toRef } from '@vueuse/core';
 import { FilterFilled } from '@ant-design/icons-vue';
 import { BondDto } from '@investments/shared';
+import { toRef } from '@vueuse/core';
+import { TableColumnType } from 'ant-design-vue';
+import { FilterValue, SorterResult } from 'ant-design-vue/es/table/interface';
+import { onMounted } from 'vue';
 
-import DurationFilter from './DurationFilter.vue';
 import { riskTypeByLevel, useBondsStore, useFilters } from '../model';
 import { getDuration } from '../utils';
+import DurationFilter from './DurationFilter.vue';
 
 const bondStore = useBondsStore();
 const bonds = toRef(bondStore, 'bonds');

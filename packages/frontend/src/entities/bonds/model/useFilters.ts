@@ -1,6 +1,7 @@
 import { BondDto } from '@investments/shared';
+import { computed, Ref, ref } from 'vue';
+
 import { getDurationValue } from '../utils';
-import { computed, ref, Ref } from 'vue';
 
 export const useFilters = (bonds: Ref<Array<BondDto>>) => {
   const selectedRisks = ref<number[]>([1]);

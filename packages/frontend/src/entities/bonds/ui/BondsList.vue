@@ -1,10 +1,10 @@
 <template>
   <FilterPanel
-    v-model:selectedRisks="selectedRisks"
-    v-model:sortField="sortField"
-    v-model:sortOrder="sortOrder"
-    v-model:minDuration="minDuration"
-    v-model:maxDuration="maxDuration"
+    v-model:selected-risks="selectedRisks"
+    v-model:sort-field="sortField"
+    v-model:sort-order="sortOrder"
+    v-model:min-duration="minDuration"
+    v-model:max-duration="maxDuration"
   />
   <div ref="scrollRef" />
   <AList
@@ -47,11 +47,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useBondsStore, useFilters } from '../model';
 import { onMounted, ref, toRef } from 'vue';
-import FilterPanel from './FilterPanel.vue';
-import { usePagination, riskTypeByLevel } from '../model';
+
+import { useBondsStore, useFilters } from '../model';
+import { riskTypeByLevel, usePagination } from '../model';
 import { getDuration } from '../utils';
+import FilterPanel from './FilterPanel.vue';
 
 const bondStore = useBondsStore();
 const bonds = toRef(bondStore, 'bonds');

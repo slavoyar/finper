@@ -51,8 +51,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, defineProps, defineEmits } from 'vue';
 import type { CheckboxOptionType } from 'ant-design-vue';
+import { defineEmits, defineProps, ref, watch } from 'vue';
 
 interface Props {
   selectedRisks: number[];
