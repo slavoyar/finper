@@ -7,6 +7,7 @@ import { globalIgnores } from 'eslint/config';
 import simpleSortPlugin from 'eslint-plugin-simple-import-sort';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,7 +19,7 @@ export default tseslint.config(
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
-  ...eslintPluginVue.configs['flat/recommended'],
+  ...eslintPluginVue.configs['flat/strongly-recommended'],
   eslintPluginPrettierRecommended,
   {
     plugins: {
@@ -34,6 +35,9 @@ export default tseslint.config(
         extraFileExtensions: ['.vue'],
         project: ['./tsconfig.json'],
         tsconfigRootDir: __dirname,
+      },
+      globals: {
+        ...globals.browser,
       },
     },
   },

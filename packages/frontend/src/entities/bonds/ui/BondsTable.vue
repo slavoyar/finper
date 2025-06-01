@@ -16,8 +16,8 @@
         >
           {{ record.name }}
         </a>
-      </template> </template
-    >a
+      </template>
+    </template>
     <template #customFilterDropdown>
       <DurationFilter v-model:min-duration="minDuration" v-model:max-duration="maxDuration" />
     </template>

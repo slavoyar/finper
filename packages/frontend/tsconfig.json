@@ -27,7 +27,7 @@
     },
     "strictNullChecks": true
   },
-  "include": ["src/**/*.ts", "*.config.ts", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "*.config.ts", "src/**/*.vue", "src/**/*.d.ts"],
   "references": [
     {
       "path": "./tsconfig.node.json"

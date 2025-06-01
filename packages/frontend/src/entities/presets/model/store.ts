@@ -1,4 +1,4 @@
-import { BondPresetDto, PresetDto } from '@investments/shared';
+import { PresetDto } from '@investments/shared';
 import { useBaseStore } from '@shared/store';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
@@ -19,7 +19,7 @@ export const usePresetStore = defineStore('presets', () => {
     return baseStore.makeRequest(presetsService.createPreset(preset));
   };
 
-  const bondPresets = computed((): BondPresetDto[] => {
+  const bondPresets = computed(() => {
     return presets.value.filter((p) => p.type === 'bond');
   });
 
