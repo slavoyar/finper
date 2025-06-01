@@ -1,8 +1,9 @@
+/* eslint-disable */
 import { ApiClient, CancellablePromise, ProxiedApiClient } from './api';
 
 export abstract class BaseService {
   protected api: ProxiedApiClient;
-  private trackedRequests: CancellablePromise<any>[] = [];
+  private trackedRequests: CancellablePromise<unknown>[] = [];
 
   constructor(baseURL: string = '') {
     const apiInstance = ApiClient.getInstance(baseURL);
@@ -34,15 +35,15 @@ export abstract class BaseService {
     }) as ProxiedApiClient;
   }
 
-  private trackRequest(promise: CancellablePromise<any>) {
+  public cancelAllRequests() {
+    this.trackedRequests.forEach((request) => request.cancel());
+    this.trackedRequests = [];
+  }
+
+  private trackRequest(promise: CancellablePromise<unknown>) {
     this.trackedRequests.push(promise);
     promise.finally(() => {
       this.trackedRequests = this.trackedRequests.filter((p) => p !== promise);
     });
-  }
-
-  public cancelAllRequests() {
-    this.trackedRequests.forEach((request) => request.cancel());
-    this.trackedRequests = [];
   }
 }

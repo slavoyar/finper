@@ -49,8 +49,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, toRef } from 'vue';
 
-import { useBondsStore, useFilters } from '../model';
-import { riskTypeByLevel, usePagination } from '../model';
+import { riskTypeByLevel, useBondsStore, useFilters, usePagination } from '../model';
 import { getDuration } from '../utils';
 import FilterPanel from './FilterPanel.vue';
 
@@ -59,8 +58,8 @@ const bonds = toRef(bondStore, 'bonds');
 
 const scrollRef = ref<HTMLDivElement>();
 
-onMounted(() => {
-  bondStore.fetchBonds();
+onMounted(async () => {
+  await bondStore.fetchBonds();
 });
 
 const scrollToTop = () => {

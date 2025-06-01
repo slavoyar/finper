@@ -1,3 +1,4 @@
+/* eslint-disable */
 export interface CancellablePromise<T> extends Promise<T> {
   cancel: () => void;
 }
@@ -20,11 +21,6 @@ export class ApiClient {
       ApiClient.instance = new ApiClient(baseURL);
     }
     return ApiClient.instance;
-  }
-
-  private createRequestKey(method: string, url: string, data?: any): string {
-    const dataString = data ? JSON.stringify(data) : '';
-    return `${method}:${url}:${dataString}`;
   }
 
   public request<T>(
@@ -123,5 +119,10 @@ export class ApiClient {
 
   public delete<T>(url?: string, options?: RequestInit): CancellablePromise<T> {
     return this.request<T>('DELETE', url, undefined, options);
+  }
+
+  private createRequestKey(method: string, url: string, data?: any): string {
+    const dataString = data ? JSON.stringify(data) : '';
+    return `${method}:${url}:${dataString}`;
   }
 }

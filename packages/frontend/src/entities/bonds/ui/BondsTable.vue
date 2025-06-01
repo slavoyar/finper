@@ -44,8 +44,8 @@ const bonds = toRef(bondStore, 'bonds');
 const { selectedRisks, sortField, sortOrder, minDuration, maxDuration, filteredSortedBonds } =
   useFilters(bonds);
 
-onMounted(() => {
-  bondStore.fetchBonds();
+onMounted(async () => {
+  await bondStore.fetchBonds();
 });
 
 const columns: TableColumnType<BondDto>[] = [
@@ -74,13 +74,14 @@ const columns: TableColumnType<BondDto>[] = [
       },
     ],
     defaultFilteredValue: ['1'],
-    customRender: ({ value }) => riskTypeByLevel[value],
+    customRender: ({ value }) => riskTypeByLevel[value as number],
   },
   {
     title: 'Price',
     dataIndex: 'lastPrice',
     key: 'price',
-    customRender: ({ value, record }) => `${value.toFixed(2)} ${record.currency}`,
+    customRender: ({ value, record }: { value: number; record: BondDto }) =>
+      `${value.toFixed(2)} ${record.currency}`,
   },
   {
     title: 'Yield',
@@ -95,7 +96,6 @@ const columns: TableColumnType<BondDto>[] = [
     key: 'duration',
     sorter: true,
     customFilterDropdown: true,
-    onFilterDropdownOpenChange: (visible) => console.log(visible),
     customRender: ({ record }) => getDuration(record.maturityDate),
   },
 ];
