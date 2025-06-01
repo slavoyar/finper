@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 import { BondsList, BondsTable } from '@entities/bonds';
-import { useIsMobile } from '@shared/composabes/useIsMobile';
+import { useIsMobile } from '@shared/composabes';
 
 const isMobile = useIsMobile();
 </script>
