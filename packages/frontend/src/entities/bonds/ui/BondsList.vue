@@ -47,9 +47,10 @@
 </template>
 
 <script lang="ts" setup>
+import { riskTypeByLevel } from '@shared/consts';
 import { onMounted, ref, toRef } from 'vue';
 
-import { riskTypeByLevel, useBondsStore, useFilters, usePagination } from '../model';
+import { useBondsStore, useFilters, usePagination } from '../model';
 import { getDuration } from '../utils';
 import FilterPanel from './FilterPanel.vue';
 

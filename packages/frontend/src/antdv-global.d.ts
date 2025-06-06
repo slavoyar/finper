@@ -5,6 +5,7 @@ declare module 'vue' {
     ATable: (typeof import('ant-design-vue'))['Table'];
     AButton: (typeof import('ant-design-vue'))['Button'];
     AInput: (typeof import('ant-design-vue'))['Input'];
+    AInputNumber: (typeof import('ant-design-vue'))['InputNumber'];
     AModal: (typeof import('ant-design-vue'))['Modal'];
     AForm: (typeof import('ant-design-vue'))['Form'];
     AFormItem: (typeof import('ant-design-vue'))['FormItem'];

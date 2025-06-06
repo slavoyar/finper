@@ -30,12 +30,13 @@
 <script lang="ts" setup>
 import { FilterFilled } from '@ant-design/icons-vue';
 import { BondDto } from '@investments/shared';
+import { riskTypeByLevel } from '@shared/consts';
 import { toRef } from '@vueuse/core';
 import { TableColumnType } from 'ant-design-vue';
 import { FilterValue, SorterResult } from 'ant-design-vue/es/table/interface';
 import { onMounted } from 'vue';
 
-import { riskTypeByLevel, useBondsStore, useFilters } from '../model';
+import { useBondsStore, useFilters } from '../model';
 import { getDuration } from '../utils';
 import DurationFilter from './DurationFilter.vue';
 

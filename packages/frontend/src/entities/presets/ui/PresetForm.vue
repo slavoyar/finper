@@ -1,5 +1,5 @@
 <template>
-  <component :is="getFormComponent(preset.type)" :preset="preset" @submit="onSubmit" />
+  <component :is="getFormComponent(type)" v-model:preset="preset" v-bind="$attrs" />
 </template>
 
 <script lang="ts" setup>
@@ -7,8 +7,8 @@ import { PresetDto } from '@investments/shared';
 
 import BondPresetForm from './forms/BondPresetForm.vue';
 
-defineProps<{ preset: PresetDto }>();
-const emit = defineEmits(['submit']);
+const preset = defineModel<Partial<PresetDto>>('preset', { required: true });
+defineProps<{ type: PresetDto['type'] }>();
 
 const getFormComponent = (type: PresetDto['type']) => {
   switch (type) {
@@ -17,9 +17,5 @@ const getFormComponent = (type: PresetDto['type']) => {
     default:
       throw new Error(`Unknown preset type`);
   }
-};
-
-const onSubmit = (data: Omit<PresetDto, 'id'>) => {
-  emit('submit', data);
 };
 </script>

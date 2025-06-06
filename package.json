@@ -14,6 +14,9 @@
   "license": "ISC",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "npm --workspace frontend run dev & npm --workspace backend run start:dev"
+  },
   "workspaces": [
     "packages/backend",
     "packages/frontend",

@@ -1,11 +1,9 @@
 <template>
-  <BondsList v-if="isMobile" />
-  <BondsTable v-else />
+  <CreatePresetButton />
+  <BondsList />
 </template>
 
 <script setup lang="ts">
-import { BondsList, BondsTable } from '@entities/bonds';
-import { useIsMobile } from '@shared/composabes';
-
-const isMobile = useIsMobile();
+import { BondsList } from '@entities/bonds';
+import { CreatePresetButton } from '@entities/presets';
 </script>

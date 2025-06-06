@@ -1,55 +1,59 @@
 <template>
-  <a-form layout="vertical" @submit.prevent="handleSubmit">
-    <a-form-item label="Risk Levels">
-      <a-select
-        v-model:value="form.riskLevels"
+  <AForm layout="vertical" :model="preset" :rules="rulesRef">
+    <AFormItem label="Risk Levels" v-bind="validateInfos.riskLevels">
+      <ASelect
+        v-model:value="preset.riskLevels"
+        :options="riskOptions"
         mode="tags"
         type="number"
         :token-separators="[',']"
-        placeholder="Enter risk levels (e.g., 1,2,3)"
+        placeholder="Selete risk levels"
       />
-    </a-form-item>
+    </AFormItem>
 
-    <a-form-item label="Minimum Duration">
-      <a-input-number v-model:value="form.minDuration" :min="0" style="width: 100%" />
-    </a-form-item>
+    <AFormItem label="Count" v-bind="validateInfos.count">
+      <AInputNumber v-model:value="preset.count" :min="5" style="width: 100%" />
+    </AFormItem>
 
-    <a-form-item label="Maximum Duration">
-      <a-input-number v-model:value="form.maxDuration" :min="form.minDuration" style="width: 100%" />
-    </a-form-item>
+    <AFormItem label="Minimum Duration">
+      <AInputNumber v-model:value="preset.minDuration" :min="0" style="width: 100%" />
+    </AFormItem>
 
-    <a-form-item label="Count">
-      <a-input-number v-model:value="form.count" :min="1" style="width: 100%" />
-    </a-form-item>
-
-    <a-form-item>
-      <a-button type="primary" html-type="submit">Create Bond Preset</a-button>
-    </a-form-item>
-  </a-form>
+    <AFormItem label="Maximum Duration">
+      <AInputNumber
+        v-model:value="preset.maxDuration"
+        :min="preset.minDuration ?? 0 + 1"
+        style="width: 100%"
+      />
+    </AFormItem>
+  </AForm>
 </template>
 
 <script setup lang="ts">
 import { BondPresetDto } from '@investments/shared';
+import { riskTypeByLevel } from '@shared/consts';
+import { useForm } from 'ant-design-vue/es/form';
+import { ValidateInfo } from 'ant-design-vue/es/form/useForm';
 import { reactive } from 'vue';
 
-const emit = defineEmits<{
-  (e: 'submit', value: Omit<BondPresetDto, 'id'>): void;
-}>();
+const preset = defineModel<Partial<BondPresetDto>>('preset', { required: true });
+const isValid = defineModel<boolean>('isValid', { required: true });
 
-const { preset } = defineProps<{ preset: BondPresetDto }>();
+const riskOptions = Object.keys(riskTypeByLevel).map((key) => ({
+  label: riskTypeByLevel[Number(key)],
+  value: Number(key),
+}));
 
-const form = reactive<Omit<BondPresetDto, 'type' | 'id'>>({
-  name: '',
-  riskLevels: preset.riskLevels,
-  minDuration: preset.minDuration,
-  maxDuration: preset.maxDuration,
-  count: preset.count,
+const rulesRef = reactive({
+  riskLevels: [{ required: true, message: 'Please select risk levels' }],
+  count: [{ required: true, message: 'Please select count' }],
 });
 
-const handleSubmit = () => {
-  emit('submit', {
-    type: 'bond',
-    ...form,
-  });
-};
+const { validateInfos } = useForm(preset, rulesRef, {
+  onValidate: () => {
+    isValid.value = Object.values(validateInfos).every(
+      (item: ValidateInfo) => item?.validateStatus === 'success'
+    );
+  },
+});
 </script>
