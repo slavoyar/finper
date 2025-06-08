@@ -1,5 +1,9 @@
 {
   "name": "@investments/shared",
   "version": "1.0.0",
-  "main": "index.ts"
+  "main": "index.ts",
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx,.cts,.mts --fix"
+  },
+  "author": "Yaroslav Zaprudskii"
 }
