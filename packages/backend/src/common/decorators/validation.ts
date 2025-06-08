@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { BadRequestException, createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 import ajv from '../ajv.instance';
@@ -16,6 +18,7 @@ export function ValidateBody(schema: object) {
       });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return request.body;
   })();
 }

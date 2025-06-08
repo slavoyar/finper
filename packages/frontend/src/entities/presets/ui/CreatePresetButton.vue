@@ -1,5 +1,5 @@
 <template>
-  <AButton type="primary" @click="isOpen = true">Create Preset</AButton>
+  <AButton type="primary" @click="isOpen = true"> Create Preset </AButton>
   <AModal
     title="Create Preset"
     :open="isOpen"

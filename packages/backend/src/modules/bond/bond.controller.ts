@@ -1,9 +1,8 @@
-import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 
 import { BondService } from './bond.service';
-import { BondDto } from '@investments/shared';
-import { bondDtoMapper } from './mappers/bond-dto.mapper';
 import { BondCronService } from './bond-cron.service';
+import { bondDtoMapper } from './mappers/bond-dto.mapper';
 
 @Controller('bonds')
 export class BondController {
@@ -13,19 +12,21 @@ export class BondController {
   ) {}
 
   @Get()
-  async getBonds(): Promise<BondDto[]> {
+  public async getBonds() {
     const bonds = await this.bondService.getBonds();
-    const bondsDto = bonds.map((bond) => bondDtoMapper(bond)).filter((bond) => !!bond) as BondDto[];
+    const bondsDto = bonds.map((bond) => bondDtoMapper(bond)).filter((bond) => !!bond);
     return bondsDto;
   }
 
   @Post('cron/update-bonds')
-  async updateBonds(@Query('offset') offset = '0') {
+  public updateBonds(@Query('offset') offset = '0') {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.bondCronService.updateBonds(Number(offset));
   }
 
   @Post('cron/update-prices')
-  async updatePrices() {
+  public updatePrices() {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.bondCronService.updateBondPrices();
   }
 }

@@ -20,19 +20,19 @@
           <ACard :title="bond.name" style="width: 100%">
             <ATypography>
               <ATypographyParagraph>
-                <ATypographyText strong>Risk:</ATypographyText>
+                <ATypographyText strong> Risk: </ATypographyText>
                 {{ riskTypeByLevel[bond.riskLevel] }}
               </ATypographyParagraph>
               <ATypographyParagraph>
-                <ATypographyText strong>Price:</ATypographyText>
+                <ATypographyText strong> Price: </ATypographyText>
                 {{ bond.lastPrice.toFixed(2) }} {{ bond.currency }}
               </ATypographyParagraph>
               <ATypographyParagraph>
-                <ATypographyText strong>Yield:</ATypographyText>
+                <ATypographyText strong> Yield: </ATypographyText>
                 {{ (bond.yield * 100).toFixed(2) }} %
               </ATypographyParagraph>
               <ATypographyParagraph>
-                <ATypographyText strong>Duration:</ATypographyText>
+                <ATypographyText strong> Duration: </ATypographyText>
                 {{ getDuration(bond.maturityDate) }}
               </ATypographyParagraph>
               <ATypographyLink :href="`https://www.tbank.ru/invest/bonds/${bond.ticker}/`" target="_blank">

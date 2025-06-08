@@ -1,7 +1,7 @@
 {
   "name": "backend",
+  "version": "1.0.0",
   "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
     "generate:proto": "tsproto --path ./src/external/tinkoff/protos --include node_modules/google-proto-files && sed -i 's/export namespace public/export namespace _public/g' ./src/external/tinkoff/protos/*.ts",

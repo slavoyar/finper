@@ -31,8 +31,8 @@
           <strong>Sort Field:</strong>
         </div>
         <ASelect v-model:value="sortField" style="width: 100%">
-          <ASelectOption value="yield">Yield</ASelectOption>
-          <ASelectOption value="duration">Duration</ASelectOption>
+          <ASelectOption value="yield"> Yield </ASelectOption>
+          <ASelectOption value="duration"> Duration </ASelectOption>
         </ASelect>
       </ACol>
 
@@ -42,8 +42,8 @@
           <strong>Sort Order:</strong>
         </div>
         <ASelect v-model:value="sortOrder" style="width: 100%">
-          <ASelectOption value="descend">Descending</ASelectOption>
-          <ASelectOption value="ascend">Ascending</ASelectOption>
+          <ASelectOption value="descend"> Descending </ASelectOption>
+          <ASelectOption value="ascend"> Ascending </ASelectOption>
         </ASelect>
       </ACol>
     </ARow>

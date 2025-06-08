@@ -13,7 +13,7 @@ export function timestampToDate(timestamp?: google.protobuf.Timestamp | null): D
   return isNaN(date.getTime()) ? null : date;
 }
 
-export const dateToTimestamp = (date?: Date): google.protobuf.Timestamp | undefined => {
+export const dateToTimestamp = (date?: Date | null): google.protobuf.Timestamp | undefined => {
   if (!date) {
     return undefined;
   }

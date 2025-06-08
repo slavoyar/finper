@@ -4,9 +4,9 @@
       <ASelect
         v-model:value="preset.riskLevels"
         :options="riskOptions"
+        :token-separators="[',']"
         mode="tags"
         type="number"
-        :token-separators="[',']"
         placeholder="Selete risk levels"
       />
     </AFormItem>

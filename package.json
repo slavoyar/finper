@@ -4,7 +4,7 @@
   "description": "Telegram mini app for investments",
   "scripts": {
     "dev": "npm --workspace frontend run dev & npm --workspace backend run start:dev",
-    "lint": "npm --workspace frontend run lint & npm --workspace backend run lint"
+    "lint": "npm --workspace frontend run lint && npm --workspace backend run lint && npm --workspace shared run lint"
   },
   "repository": {
     "type": "git",

@@ -124,7 +124,7 @@ export class BondCronService {
           {
             figi: bond.figi!,
             from: dateToTimestamp(new Date()),
-            to: dateToTimestamp(bond.maturityDate!),
+            to: dateToTimestamp(bond.maturityDate),
           },
           this.metadata
         )

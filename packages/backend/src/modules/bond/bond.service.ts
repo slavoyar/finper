@@ -6,7 +6,7 @@ import { Bond, Coupon, LastPrice } from '@prisma/client';
 export class BondService {
   constructor(private prismaService: PrismaService) {}
 
-  getBonds() {
+  public getBonds() {
     return this.prismaService.bond.findMany({
       where: {
         NOT: {
@@ -16,7 +16,7 @@ export class BondService {
     });
   }
 
-  async updateOrInsertBonds(bonds: Omit<Bond, 'id'>[]) {
+  public async updateOrInsertBonds(bonds: Omit<Bond, 'id'>[]) {
     const ops = bonds.map((bond) =>
       this.prismaService.bond.upsert({
         where: { uid: bond.uid },
@@ -28,7 +28,7 @@ export class BondService {
     await this.prismaService.$transaction(ops);
   }
 
-  async updateCoupons(couponsPerBond: { uid: string; coupons: Coupon[] }[]) {
+  public async updateCoupons(couponsPerBond: { uid: string; coupons: Coupon[] }[]) {
     const ops = couponsPerBond.map(({ uid, coupons }) =>
       this.prismaService.bond.update({
         where: { uid },
@@ -41,7 +41,7 @@ export class BondService {
     await this.prismaService.$transaction(ops);
   }
 
-  async updatePrices(prices: LastPrice[]) {
+  public async updatePrices(prices: LastPrice[]) {
     const operations = prices
       .filter((price) => !!price.instrumentUid)
       .map((price) =>
