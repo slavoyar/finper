@@ -1,5 +1,5 @@
 import { quotationToNumber } from '@common/utils';
-import { BondDto } from '@investments/shared';
+import { BondDto } from '@finper/shared';
 import { Bond } from '@prisma/client';
 
 export const bondDtoMapper = (bond: Bond): BondDto | null => {
