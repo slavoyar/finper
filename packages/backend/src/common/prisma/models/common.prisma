@@ -1,0 +1,40 @@
+
+type Quotation {
+  units    Int?
+  nano     Int?
+}
+
+type MoneyValue {
+  currency String?
+  units    Int?
+  nano     Int?
+}
+
+type BrandData {
+  name          String?
+  description   String?
+  info          String?
+  company       String?
+  logoName      String?
+}
+
+type LastPrice {
+  figi           String?
+  price          Quotation?
+  time           DateTime?
+  instrumentUid  String?
+  lastPriceType  Int? // Or define as enum
+}
+
+type Coupon {
+  figi             String?
+  couponDate       DateTime?
+  couponNumber     Int?
+  fixDate          DateTime?
+  payOneBond       MoneyValue?
+  couponType       Int?
+  couponStartDate  DateTime?
+  couponEndDate    DateTime?
+  couponPeriod     Int?
+}
+

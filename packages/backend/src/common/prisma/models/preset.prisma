@@ -1,0 +1,9 @@
+model Preset {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  type        String
+  riskLevels  Int[]
+  minDuration Int?
+  maxDuration Int?
+  count       Int?
+}
