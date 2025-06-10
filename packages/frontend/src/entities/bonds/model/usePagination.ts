@@ -1,4 +1,4 @@
-import { BondDto } from '@investments/shared';
+import { BondDto } from '@finper/shared';
 import { computed, Ref, ref, watch } from 'vue';
 
 export const usePagination = (bonds: Ref<Array<BondDto>>, scrollToTop?: () => void) => {

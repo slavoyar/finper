@@ -1,5 +1,6 @@
-import { BondPresetSchema, BondPresetDto } from './bond-preset';
+import { BondPresetDto, BondPresetSchema, CreateBondPresetDto } from './bond-preset';
 
 type PresetDto = BondPresetDto;
+type CreatePresetDto = CreateBondPresetDto;
 
-export { BondPresetSchema, BondPresetDto, PresetDto };
+export { BondPresetDto, BondPresetSchema, CreatePresetDto, PresetDto };

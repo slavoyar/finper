@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "Telegram mini app for investments",
   "scripts": {
-    "dev": "npm --workspace frontend run dev & npm --workspace backend run start:dev",
-    "lint": "npm --workspace frontend run lint && npm --workspace backend run lint && npm --workspace shared run lint"
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "dev:frontend": "npm --workspace @finper/frontend run dev",
+    "dev:backend": "npm --workspace @finper/backend run start:dev",
+    "lint": "npm run lint:shared && npm run lint:backend && npm run lint:frontend",
+    "lint:shared": "npm --workspace @finper/shared run lint",
+    "lint:backend": "npm --workspace @finper/backend run lint",
+    "lint:frontend": "npm --workspace @finper/frontend run lint"
   },
   "repository": {
     "type": "git",

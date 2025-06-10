@@ -1,4 +1,4 @@
-import { PresetDto } from '@investments/shared';
+import { PresetDto } from '@finper/shared';
 import { useBaseStore } from '@shared/store';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';

@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PresetDto } from '@investments/shared';
+import { PresetDto } from '@finper/shared';
 import { ref } from 'vue';
 
 import { usePresetStore } from '../model';

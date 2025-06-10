@@ -1,4 +1,4 @@
-import { BondDto } from '@investments/shared';
+import { BondDto } from '@finper/shared';
 import { computed, Ref, ref } from 'vue';
 
 import { getDurationValue } from '../utils';

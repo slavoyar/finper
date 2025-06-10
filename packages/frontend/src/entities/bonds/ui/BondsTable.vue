@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
 import { FilterFilled } from '@ant-design/icons-vue';
-import { BondDto } from '@investments/shared';
+import { BondDto } from '@finper/shared';
 import { riskTypeByLevel } from '@shared/consts';
 import { toRef } from '@vueuse/core';
 import { TableColumnType } from 'ant-design-vue';

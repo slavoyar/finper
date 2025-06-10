@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@finper/backend",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -19,8 +19,8 @@
     "prisma:generate": "prisma generate --schema ./src/common/prisma"
   },
   "dependencies": {
+    "@finper/shared": "*",
     "@grpc/grpc-js": "^1.13.3",
-    "@investments/shared": "*",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",

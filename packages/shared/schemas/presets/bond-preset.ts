@@ -1,4 +1,5 @@
 import { type Static, Type } from '@sinclair/typebox';
+
 import { PresetSchema } from './preset';
 
 const BondPresetDataSchema = Type.Object({
@@ -17,3 +18,5 @@ export const BondPresetSchema = Type.Intersect([
 ]);
 
 export type BondPresetDto = Static<typeof BondPresetSchema>;
+
+export type CreateBondPresetDto = Omit<BondPresetDto, 'id'>;

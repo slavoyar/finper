@@ -1,4 +1,4 @@
-import { BondDto } from '@investments/shared';
+import { BondDto } from '@finper/shared';
 import { useBaseStore } from '@shared/store';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';

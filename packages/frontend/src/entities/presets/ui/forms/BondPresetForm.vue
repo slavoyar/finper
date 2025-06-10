@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { BondPresetDto } from '@investments/shared';
+import { BondPresetDto } from '@finper/shared';
 import { riskTypeByLevel } from '@shared/consts';
 import { useForm } from 'ant-design-vue/es/form';
 import { ValidateInfo } from 'ant-design-vue/es/form/useForm';

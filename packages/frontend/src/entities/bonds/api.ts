@@ -1,4 +1,4 @@
-import { BondDto } from '@investments/shared';
+import { BondDto } from '@finper/shared';
 import { BaseService, CancellablePromise } from '@shared/api';
 
 class BondsService extends BaseService {
