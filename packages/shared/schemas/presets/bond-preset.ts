@@ -4,8 +4,8 @@ import { PresetSchema } from './preset';
 
 const BondPresetDataSchema = Type.Object({
   riskLevels: Type.Array(Type.Number()),
-  minDuration: Type.Number(),
-  maxDuration: Type.Number(),
+  minDuration: Type.Optional(Type.Number()),
+  maxDuration: Type.Optional(Type.Number()),
   count: Type.Number(),
 });
 

@@ -1,4 +1,9 @@
 <template>
+  <AForm layout="vertical">
+    <AFormItem label="Name">
+      <AInput v-model:value="preset.name" placeholder="Preset name" />
+    </AFormItem>
+  </AForm>
   <component :is="getFormComponent(type)" v-model:preset="preset" v-model:is-valid="isValid" />
 </template>
 

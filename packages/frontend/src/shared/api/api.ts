@@ -17,7 +17,7 @@ export class ApiClient {
   }
 
   public static getInstance(baseURL?: string): ApiClient {
-    if (!ApiClient.instance) {
+    if (!ApiClient.instance || ApiClient.instance.baseURL !== baseURL) {
       ApiClient.instance = new ApiClient(baseURL);
     }
     return ApiClient.instance;

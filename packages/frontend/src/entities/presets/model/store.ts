@@ -10,13 +10,14 @@ export const usePresetStore = defineStore('presets', () => {
 
   const presets = ref<Array<PresetDto>>([]);
 
-  const fetchPresets = async () => {
-    const response = await baseStore.makeRequest(presetsService.fetchPresets());
+  const fetchPresets = async (type: PresetDto['type'] = 'bond') => {
+    const response = await baseStore.makeRequest(presetsService.fetchPresets(type));
     presets.value = response || [];
   };
 
-  const createPreset = (preset: PresetDto) => {
-    return baseStore.makeRequest(presetsService.createPreset(preset));
+  const createPreset = async (preset: PresetDto) => {
+    await baseStore.makeRequest(presetsService.createPreset(preset));
+    await fetchPresets();
   };
 
   const bondPresets = computed(() => {
