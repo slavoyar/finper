@@ -10,6 +10,10 @@ export class PresetService {
     return this.prismaService.preset.findMany({ where: { type } });
   }
 
+  public getPreset(id: string) {
+    return this.prismaService.preset.findUnique({ where: { id } });
+  }
+
   public createPreset(dto: CreatePresetDto) {
     return this.prismaService.preset.create({ data: dto });
   }

@@ -45,10 +45,12 @@ export class BotService {
     if (!callbackQuery.data || !callbackQuery.message) {
       return undefined;
     }
-    const command = await this.createCommand(callbackQuery.data);
+    const [commandName] = callbackQuery.data.split(':');
+    const command = await this.createCommand(commandName);
     return command?.execute({
       userId: callbackQuery.from.id,
       chatId: callbackQuery.message.chat.id,
+      data: callbackQuery.data,
     });
   }
 

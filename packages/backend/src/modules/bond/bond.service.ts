@@ -1,4 +1,5 @@
 import { PrismaService } from '@common/prisma/prisma.service';
+import { BondPresetDto } from '@finper/shared';
 import { Injectable } from '@nestjs/common';
 import { Bond, Coupon, LastPrice } from '@prisma/client';
 
@@ -13,6 +14,42 @@ export class BondService {
           amortizationFlag: true,
         },
       },
+    });
+  }
+
+  public getFilteredBonds(
+    preset: Pick<BondPresetDto, 'minDuration' | 'maxDuration' | 'riskLevels' | 'count'>
+  ) {
+    const { minDuration, maxDuration, riskLevels } = preset;
+
+    const getDate = (duration?: number) => {
+      if (!duration) {
+        return undefined;
+      }
+      return new Date(Date.now() + duration * (365.25 / 12) * 24 * 60 * 60 * 1000);
+    };
+
+    return this.prismaService.bond.findMany({
+      where: {
+        AND: [
+          {
+            NOT: {
+              amortizationFlag: false,
+            },
+          },
+          {
+            maturityDate: {
+              gte: getDate(minDuration),
+              lte: getDate(maxDuration),
+            },
+          },
+          riskLevels.length > 0 ? { riskLevel: { in: riskLevels } } : {},
+        ],
+      },
+      orderBy: {
+        yield: 'desc',
+      },
+      take: preset.count,
     });
   }
 
