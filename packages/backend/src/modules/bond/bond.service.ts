@@ -10,9 +10,18 @@ export class BondService {
   public getBonds() {
     return this.prismaService.bond.findMany({
       where: {
-        NOT: {
-          amortizationFlag: true,
-        },
+        AND: [
+          {
+            NOT: {
+              amortizationFlag: true,
+            },
+          },
+          {
+            NOT: {
+              floatingCouponFlag: true,
+            },
+          },
+        ],
       },
     });
   }
