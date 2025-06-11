@@ -6,12 +6,16 @@ class PresetService extends BaseService {
     super('/api/presets');
   }
 
-  fetchPresets(): CancellablePromise<Array<PresetDto>> {
-    return this.api.get();
+  fetchPresets(type: PresetDto['type']): CancellablePromise<Array<PresetDto>> {
+    return this.api.get(`/${type}`);
   }
 
   createPreset(preset: PresetDto): CancellablePromise<void> {
     return this.api.post(preset);
+  }
+
+  deletePreset(id: PresetDto['id']): CancellablePromise<void> {
+    return this.api.delete(`/${id}`);
   }
 }
 

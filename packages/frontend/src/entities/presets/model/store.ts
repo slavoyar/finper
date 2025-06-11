@@ -20,6 +20,11 @@ export const usePresetStore = defineStore('presets', () => {
     await fetchPresets();
   };
 
+  const deletePreset = async (id: PresetDto['id']) => {
+    await baseStore.makeRequest(presetsService.deletePreset(id));
+    await fetchPresets();
+  };
+
   const bondPresets = computed(() => {
     return presets.value.filter((p) => p.type === 'bond');
   });
@@ -29,5 +34,6 @@ export const usePresetStore = defineStore('presets', () => {
     bondPresets,
     fetchPresets,
     createPreset,
+    deletePreset,
   };
 });

@@ -1,9 +1,10 @@
 <template>
-  <CreatePresetButton />
   <BondsList />
+  <CreatePresetButton />
+  <BondPresetsTable />
 </template>
 
 <script setup lang="ts">
 import { BondsList } from '@entities/bonds';
-import { CreatePresetButton } from '@entities/presets';
+import { BondPresetsTable, CreatePresetButton } from '@entities/presets';
 </script>
