@@ -1,4 +1,5 @@
 <template>
+  <slot name="filter" v-if="isMobile" />
   <component :is="component" v-bind="{ ...$attrs, ...props }">
     <template v-for="(_, slot) of $slots" #[slot]="scope">
       <slot :name="slot" v-bind="scope" />

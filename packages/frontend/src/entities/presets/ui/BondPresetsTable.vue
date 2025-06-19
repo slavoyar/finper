@@ -1,15 +1,16 @@
 <template>
-  <ATable :columns="columns" :data-source="presetStore.bondPresets">
+  <AdaptiveTable :columns="columns" :data-source="presetStore.bondPresets" show-header>
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'action'">
         <AButton type="link" @click="presetStore.deletePreset(record.id)">Delete</AButton>
       </template>
     </template>
-  </ATable>
+  </AdaptiveTable>
 </template>
 
 <script setup lang="ts">
 import { riskTypeByLevel } from '@shared/consts';
+import { AdaptiveTable } from '@shared/ui';
 import { TableColumnType } from 'ant-design-vue';
 import { onMounted } from 'vue';
 
@@ -41,7 +42,7 @@ const columns: TableColumnType[] = [
     title: 'Risk',
     dataIndex: 'riskLevels',
     key: 'risk',
-    customRender: ({ value }: { value: number[] }) => value.map((item) => riskTypeByLevel[item]).join(', '),
+    customRender: ({ text }: { text: number[] }) => text.map((item) => riskTypeByLevel[item]).join(', '),
   },
   {
     title: 'Action',

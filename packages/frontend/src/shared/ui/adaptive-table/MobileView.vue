@@ -1,11 +1,16 @@
 <template>
   <AList v-bind="$attrs" :data-source="dataSource" :grid="{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3 }">
     <template #renderItem="{ item }">
-      <AListItem>
+      <AListItem :style="{ padding: 0 }">
         <ACard :title="item.name" style="width: 100%">
           <ATypography>
             <template v-for="(column, index) in columns" :key="column.key">
-              <ATypographyParagraph>
+              <ATypographyParagraph
+                v-if="
+                  column.dataIndex !== 'name' &&
+                  (item[column.dataIndex as keyof typeof item] || column.customRender)
+                "
+              >
                 <ATypographyText strong> {{ column.title }}: </ATypographyText>
                 <template v-if="column.customRender">
                   {{

@@ -42,7 +42,7 @@ export class BondCommand extends BaseCommand implements ICommand {
         this.keyboardBuilder.addRow();
       }
       this.keyboardBuilder.addColumn({
-        text: preset.name as string,
+        text: preset.name,
         callback_data: `preset:${preset.id}`,
       });
     });

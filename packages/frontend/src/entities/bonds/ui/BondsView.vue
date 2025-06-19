@@ -1,21 +1,23 @@
 <template>
-  <FilterPanel
-    v-model:selected-risks="selectedRisks"
-    v-model:sort-field="sortField"
-    v-model:sort-order="sortOrder"
-    v-model:min-duration="minDuration"
-    v-model:max-duration="maxDuration"
-  />
   <div ref="scrollRef" />
   <AdaptiveTable
     :loading="bondStore.isLoading"
     :columns="columns"
     :data-source="filteredSortedBonds"
     :row-key="(record) => record.id"
-    :pagination="bondStore.isLoading ? false : pagination"
+    :pagination="bondStore.isLoading && !filteredSortedBonds.length ? false : pagination"
     show-header
     @change="onTableChange"
   >
+    <template #filter>
+      <FilterPanel
+        v-model:selected-risks="selectedRisks"
+        v-model:sort-field="sortField"
+        v-model:sort-order="sortOrder"
+        v-model:min-duration="minDuration"
+        v-model:max-duration="maxDuration"
+      />
+    </template>
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'name'">
         <ATypographyLink
