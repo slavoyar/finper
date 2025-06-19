@@ -8,5 +8,10 @@ export const router = createRouter({
       name: 'home',
       component: () => import('@pages/MainPage.vue'),
     },
+    {
+      path: '/presets',
+      name: 'presets',
+      component: () => import('@pages/PresetPage.vue'),
+    },
   ],
 });

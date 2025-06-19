@@ -25,6 +25,14 @@ declare module 'vue' {
     ATypographyParagraph: (typeof import('ant-design-vue'))['TypographyParagraph'];
     ATypographyText: (typeof import('ant-design-vue'))['TypographyText'];
     ATypographyLink: (typeof import('ant-design-vue'))['TypographyLink'];
+    ALayout: (typeof import('ant-design-vue'))['Layout'];
+    ALayoutHeader: (typeof import('ant-design-vue'))['LayoutHeader'];
+    ALayoutContent: (typeof import('ant-design-vue'))['LayoutContent'];
+    ALayoutSider: (typeof import('ant-design-vue'))['LayoutSider'];
+    AMenu: (typeof import('ant-design-vue'))['Menu'];
+    AMenuItem: (typeof import('ant-design-vue'))['MenuItem'];
+    AFlex: (typeof import('ant-design-vue'))['Flex'];
+    ASpace: (typeof import('ant-design-vue'))['Space'];
     // Add more components here as needed
   }
 }
