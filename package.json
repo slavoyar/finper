@@ -1,16 +1,7 @@
 {
-  "name": "investments-mini-app",
+  "name": "finper",
   "version": "1.0.0",
-  "description": "Telegram mini app for investments",
-  "scripts": {
-    "dev": "npm run dev:backend & npm run dev:frontend",
-    "dev:frontend": "npm --workspace @finper/frontend run dev",
-    "dev:backend": "npm --workspace @finper/backend run start:dev",
-    "lint": "npm run lint:shared && npm run lint:backend && npm run lint:frontend",
-    "lint:shared": "npm --workspace @finper/shared run lint",
-    "lint:backend": "npm --workspace @finper/backend run lint",
-    "lint:frontend": "npm --workspace @finper/frontend run lint"
-  },
+  "description": "Telegram mini app for personal finances",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/slavoyar/investments-mini-app.git"
@@ -21,9 +12,7 @@
   "type": "module",
   "private": true,
   "workspaces": [
-    "packages/backend",
-    "packages/frontend",
-    "packages/shared"
+    "packages/*"
   ],
   "devDependencies": {
     "@eslint/js": "^9.22.0",
@@ -34,11 +23,13 @@
     "eslint-plugin-prettier": "^5.4.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "prettier": "^3.5.3",
+    "turbo": "^2.5.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.1"
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.33",
     "ajv": "^8.17.1"
-  }
+  },
+  "packageManager": "npm@11.4.2"
 }
