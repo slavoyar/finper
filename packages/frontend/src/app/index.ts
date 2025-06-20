@@ -13,5 +13,3 @@ app.use(createPinia());
 app.use(router);
 app.use(Antd);
 app.mount('#app');
-
-console.error(Telegram.WebApp.initData);

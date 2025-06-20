@@ -1,6 +1,6 @@
 <template>
   <AForm layout="vertical">
-    <AFormItem label="Name">
+    <AFormItem label="Name" required>
       <AInput v-model:value="preset.name" placeholder="Preset name" />
     </AFormItem>
   </AForm>

@@ -4,6 +4,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     ATable: (typeof import('ant-design-vue'))['Table'];
     AButton: (typeof import('ant-design-vue'))['Button'];
+    AFloatButton: (typeof import('ant-design-vue'))['FloatButton'];
     AInput: (typeof import('ant-design-vue'))['Input'];
     AInputNumber: (typeof import('ant-design-vue'))['InputNumber'];
     AModal: (typeof import('ant-design-vue'))['Modal'];

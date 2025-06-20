@@ -1,39 +1,37 @@
 <template>
-  <ALayout style="min-height: 100vh" :has-sider="isMobile">
+  <ALayout style="min-height: 100vh">
     <ALayoutSider
-      :collapsed="isCollapsed"
+      theme="light"
+      v-model:collapsed="isCollapsed"
       :default-collapsed="true"
       collapsed-width="0"
+      collapsible
       width="100%"
-      :style="{
-        height: '100vh',
-        overflow: 'hidden',
-        position: 'fixed',
-        touchAction: 'none',
-        zIndex: 10,
-      }"
+      :trigger="null"
     >
       <ASpace direction="vertical" :style="{ width: '100%' }">
-        <AFlex justify="flex-end" align="center" :style="{ height: '64px', padding: '10px' }">
-          <CloseOutlined :style="{ fontSize: '24px', color: '#fff' }" @click="toggleSidebar" />
+        <AFlex justify="flex-end">
+          <CloseOutlined
+            :style="{ fontSize: '24px', height: '64px', padding: '10px' }"
+            @click="toggleSidebar"
+          />
         </AFlex>
         <AMenu
           v-model:selected-keys="selectedKeys"
           :style="{ lineHeight: '64px' }"
-          theme="dark"
           :items="items"
+          :mode="isCollapsed ? 'vertical' : 'inline'"
         >
         </AMenu>
       </ASpace>
     </ALayoutSider>
     <ALayout>
-      <ALayoutHeader :style="{ padding: '10px' }">
-        <AFlex justify="space-between" align="center" :style="{ height: '100%' }">
-          <ATypography :style="{ fontSize: '24px', color: '#fff' }">Finper</ATypography>
-          <MenuOutlined :style="{ fontSize: '24px', color: '#fff' }" @click="toggleSidebar" />
-        </AFlex>
-      </ALayoutHeader>
       <ALayoutContent :style="{ padding: '10px', height: '100%' }">
+        <AFloatButton v-show="isCollapsed" :style="{ right: '10px', top: '24px' }" @click="toggleSidebar">
+          <template #icon>
+            <MenuOutlined />
+          </template>
+        </AFloatButton>
         <router-view v-show="isCollapsed || !isMobile" />
       </ALayoutContent>
     </ALayout>

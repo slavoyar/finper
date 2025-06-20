@@ -1,8 +1,7 @@
 <template>
   <ALayout style="min-height: 100vh">
-    <ALayoutSider width="300px">
-      <ATypography :style="{ padding: '20px', fontSize: '24px', color: '#fff' }">Finper</ATypography>
-      <AMenu v-model:selected-keys="selectedKeys" theme="dark" :items="items"> </AMenu>
+    <ALayoutSider width="300px" theme="light">
+      <AMenu v-model:selected-keys="selectedKeys" :items="items"> </AMenu>
     </ALayoutSider>
     <ALayout>
       <ALayoutContent :style="{ padding: '20px 50px', height: '100%' }">
