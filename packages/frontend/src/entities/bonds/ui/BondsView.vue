@@ -9,6 +9,16 @@
     show-header
     @change="onTableChange"
   >
+    <template #cardAction="{ record }">
+      <ATypographyLink
+        :href="`https://www.tbank.ru/invest/bonds/${record.ticker}/`"
+        target="_blank"
+        rel="noopener
+          noreferrer"
+      >
+        View
+      </ATypographyLink>
+    </template>
     <template #filter>
       <FilterPanel
         v-model:selected-risks="selectedRisks"
@@ -72,6 +82,28 @@ const columns: TableColumnType<BondDto>[] = [
     fixed: 'left',
   },
   {
+    title: 'Yield',
+    dataIndex: 'yield',
+    key: 'yield',
+    sorter: true,
+    defaultSortOrder: 'descend',
+    customRender: ({ value }) => `${(value * 100).toFixed(2)} %`,
+  },
+  {
+    title: 'Price',
+    dataIndex: 'lastPrice',
+    key: 'price',
+    customRender: ({ value, record }: { value: number; record: BondDto }) =>
+      `${value.toFixed(2)} ${record.currency}`,
+  },
+  {
+    title: 'Duration',
+    key: 'duration',
+    sorter: true,
+    customFilterDropdown: true,
+    customRender: ({ record }) => getDuration(record.maturityDate),
+  },
+  {
     title: 'Risk',
     dataIndex: 'riskLevel',
     key: 'risk',
@@ -91,28 +123,6 @@ const columns: TableColumnType<BondDto>[] = [
     ],
     defaultFilteredValue: ['1'],
     customRender: ({ value }) => riskTypeByLevel[value as number],
-  },
-  {
-    title: 'Price',
-    dataIndex: 'lastPrice',
-    key: 'price',
-    customRender: ({ value, record }: { value: number; record: BondDto }) =>
-      `${value.toFixed(2)} ${record.currency}`,
-  },
-  {
-    title: 'Yield',
-    dataIndex: 'yield',
-    key: 'yield',
-    sorter: true,
-    defaultSortOrder: 'descend',
-    customRender: ({ value }) => `${(value * 100).toFixed(2)} %`,
-  },
-  {
-    title: 'Duration',
-    key: 'duration',
-    sorter: true,
-    customFilterDropdown: true,
-    customRender: ({ record }) => getDuration(record.maturityDate),
   },
 ];
 

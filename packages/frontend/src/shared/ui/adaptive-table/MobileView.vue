@@ -3,6 +3,9 @@
     <template #renderItem="{ item }">
       <AListItem :style="{ padding: 0 }">
         <ACard :title="item.name" style="width: 100%">
+          <template #extra>
+            <slot name="cardAction" :record="item"> </slot>
+          </template>
           <ATypography>
             <template v-for="(column, index) in columns" :key="column.key">
               <ATypographyParagraph

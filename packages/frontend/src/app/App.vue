@@ -19,12 +19,13 @@ import MobileLayout from './layouts/MobileLayout.vue';
 const router = useRouter();
 const isMobile = useIsMobile();
 
-const selectedKeys = ref(['dashboard']);
+const selectedKeys = ref(['home']);
 
 const items: ItemType[] = [
   {
-    label: 'Dashboard',
-    key: 'dashboard',
+    label: 'Home',
+    key: 'home',
+    title: '',
     onClick: () => {
       router.push('/');
     },
@@ -32,6 +33,7 @@ const items: ItemType[] = [
   {
     label: 'Presets',
     key: 'presets',
+    title: '',
     onClick: () => {
       router.push('/presets');
     },
