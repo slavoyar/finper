@@ -37,7 +37,10 @@ export class ApiClient {
     }
 
     const controller = new AbortController();
-    const headers = new Headers(options.headers || {});
+    const defaultHeaders = {
+      'x-telegram-init-data': Telegram.WebApp.initData,
+    };
+    const headers = new Headers({ ...defaultHeaders, ...options.headers });
 
     if (data && !(data instanceof FormData)) {
       headers.set('Content-Type', 'application/json');

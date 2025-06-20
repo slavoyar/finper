@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite --host",
+    "ngrok": "ngrok http --url=feasible-ghastly-skink.ngrok-free.app 5173",
     "build": "vite build",
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
