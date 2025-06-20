@@ -13,7 +13,10 @@ export class TelegramAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
     const initData = request.headers['x-telegram-init-data'];
 
-    if (typeof initData !== 'string') {
+    if (!initData || typeof initData !== 'string') {
+      if (this.isDevMode()) {
+        return true;
+      }
       throw new UnauthorizedException('Missing initData header');
     }
 
@@ -36,10 +39,6 @@ export class TelegramAuthGuard implements CanActivate {
     const hmac = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
 
     if (hmac !== receivedHash) {
-      console.log(dataCheckString);
-      console.log(hmac);
-      console.log(receivedHash);
-
       throw new UnauthorizedException('Invalid initData');
     }
 
@@ -50,5 +49,9 @@ export class TelegramAuthGuard implements CanActivate {
     }
 
     return true;
+  }
+
+  isDevMode(): boolean {
+    return this.configService.get('NODE_ENV') === 'development';
   }
 }
