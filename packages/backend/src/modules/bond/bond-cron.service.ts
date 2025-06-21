@@ -2,7 +2,7 @@ import { dateToTimestamp, quotationToNumber } from '@common/utils';
 import { tinkoff as TinkoffInstruments } from '@external/tinkoff/protos/instruments';
 import { tinkoff as TinkoffMarketData } from '@external/tinkoff/protos/marketdata';
 import { Metadata } from '@grpc/grpc-js';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -21,6 +21,7 @@ export class BondCronService {
   private readonly metadata = new Metadata();
   private readonly instrumentsService: TinkoffInstruments._public.invest.api.contract.v1.InstrumentsService;
   private readonly marketdataService: TinkoffMarketData._public.invest.api.contract.v1.MarketDataService;
+  private readonly logger = new Logger(BondCronService.name);
 
   constructor(
     @Inject('INSTRUMENTS_CLIENT') private readonly instrumentsClient: ClientGrpc,
@@ -41,34 +42,26 @@ export class BondCronService {
 
   @Cron('0 2 * * *', { timeZone: 'Europe/Moscow' })
   public async updateBonds(offset = 0) {
-    console.log('Updating bonds...');
-    const bonds = await this.getBonds();
+    const freshBonds = await this.getBonds();
+    const bonds = await this.bondService.getBonds(false);
 
-    console.log(`Updating ${bonds.length} bonds...`);
+    const oldBonds = bonds.filter((bond) => !freshBonds.find((b) => b.uid === bond.uid));
+    await this.removeOldBonds(oldBonds);
 
-    await this.bondService.updateOrInsertBonds(bonds);
+    const newBonds = freshBonds.filter((bond) => !bonds.find((b) => b.uid === bond.uid));
+    await this.bondService.updateOrInsertBonds(newBonds);
+    await this.fillCoupons(newBonds, offset);
 
-    console.log('Updating coupons...');
-
-    for (let i = offset; i < bonds.length; i += REQUEST_LIMIT) {
-      const slice = bonds.slice(i, i + REQUEST_LIMIT);
-      const coupons = await this.getCoupons(slice);
-
-      console.log(`Updating ${i} to ${i + REQUEST_LIMIT} coupons...`);
-
-      await this.bondService.updateCoupons(coupons);
-    }
-
-    console.log('Updating yield to maturity...');
-
+    this.logger.log('Updating bond info');
+    await this.bondService.updateCoupons();
     await this.updateYields();
 
-    console.log('Bonds updated');
+    this.logger.log('Bonds updated');
   }
 
   @Cron(CronExpression.EVERY_30_MINUTES)
   public async updateBondPrices() {
-    console.log('Updating bond prices...');
+    this.logger.log('Updating bond prices...');
     const bonds = await this.bondService.getBonds();
 
     const response = await firstValueFrom(
@@ -81,17 +74,14 @@ export class BondCronService {
     );
 
     const convertedLastPrices = response.lastPrices?.map((lastPrice) => lastPriceMapper(lastPrice)) ?? [];
-
     await this.bondService.updatePrices(convertedLastPrices);
 
-    console.log('Updating yield to maturity...');
-
     await this.updateYields();
-
-    console.log('Bond prices updated');
+    this.logger.log('Bond prices updated');
   }
 
   private async getBonds(): Promise<Omit<Bond, 'id'>[]> {
+    this.logger.log('Fetching bonds...');
     const response = await firstValueFrom(
       this.instrumentsService.bonds(
         {
@@ -105,6 +95,7 @@ export class BondCronService {
       )
     );
 
+    this.logger.log(`Received ${response.instruments?.length} bonds...`);
     return response.instruments?.map((bond) => bondMapper(bond)) ?? [];
   }
 
@@ -118,7 +109,7 @@ export class BondCronService {
     let bondIndex = 1;
     for (const bond of filteredBonds) {
       startTime = new Date();
-      console.log(`[${bondIndex}/${filteredBonds.length}]Fetching coupons for ${bond.name}...`);
+      this.logger.log(`[${bondIndex}/${filteredBonds.length}]Fetching coupons for ${bond.name}...`);
       const response = await firstValueFrom(
         this.instrumentsService.getBondCoupons(
           {
@@ -173,5 +164,23 @@ export class BondCronService {
     }
 
     await this.bondService.updateYieldToMaturity(result);
+  }
+
+  private async removeOldBonds(bonds: Omit<Bond, 'id'>[]) {
+    this.logger.log(`Removing ${bonds.length} old bonds...`);
+    const ids = bonds.map((bond) => bond.uid);
+    await this.bondService.removeBonds(ids);
+  }
+
+  private async fillCoupons(bonds: Omit<Bond, 'id'>[], offset = 0) {
+    this.logger.log(`Filling ${bonds.length} bond coupons...`);
+
+    for (let i = offset; i < bonds.length; i += REQUEST_LIMIT) {
+      const slice = bonds.slice(i, i + REQUEST_LIMIT);
+      const coupons = await this.getCoupons(slice);
+
+      await this.bondService.fillCoupons(coupons);
+      this.logger.log(`Filled ${i} to ${slice.length} coupons...`);
+    }
   }
 }

@@ -1,5 +1,15 @@
 <template>
   <ALayout style="min-height: 100vh">
+    <ALayout>
+      <ALayoutContent :style="{ padding: '10px', height: '100%' }">
+        <AFloatButton v-show="isCollapsed" :style="{ right: '10px', top: '16px' }" @click="toggleSidebar">
+          <template #icon>
+            <MenuOutlined />
+          </template>
+        </AFloatButton>
+        <router-view v-show="isCollapsed || !isMobile" />
+      </ALayoutContent>
+    </ALayout>
     <ALayoutSider
       theme="light"
       v-model:collapsed="isCollapsed"
@@ -25,16 +35,6 @@
         </AMenu>
       </ASpace>
     </ALayoutSider>
-    <ALayout>
-      <ALayoutContent :style="{ padding: '10px', height: '100%' }">
-        <AFloatButton v-show="isCollapsed" :style="{ right: '10px', top: '24px' }" @click="toggleSidebar">
-          <template #icon>
-            <MenuOutlined />
-          </template>
-        </AFloatButton>
-        <router-view v-show="isCollapsed || !isMobile" />
-      </ALayoutContent>
-    </ALayout>
   </ALayout>
 </template>
 
