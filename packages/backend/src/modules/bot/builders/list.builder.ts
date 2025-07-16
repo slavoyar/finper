@@ -2,7 +2,7 @@ export class ListBuilder<T> {
   constructor(
     private readonly title: string,
     private readonly items: T[],
-    private readonly customItemBuilder: (item: T) => string
+    private readonly customItemBuilder: (item: T, index: number) => string
   ) {}
 
   public build(): string {

@@ -7,7 +7,6 @@ import { BondCommand } from './bond.command';
 import { CommandName, ICommand } from './command.interface';
 import { HelpCommand } from './help.command';
 import { PresetCommand } from './preset.command';
-import { StartCommand } from './start.command';
 
 @Injectable()
 export class CommandFactory {
@@ -18,7 +17,6 @@ export class CommandFactory {
     const bondService = await this.moduleRef.resolve(BondService);
     switch (name) {
       case 'start':
-        return new StartCommand();
       case 'help':
         return new HelpCommand();
       case 'bonds': {

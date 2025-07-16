@@ -63,3 +63,7 @@ export function quotationToNumber(quotation?: Quotation | null): number | null {
   }
   return (quotation.units || 0) + (quotation.nano || 0) / 1e9;
 }
+
+export function escapeMarkdownV2(text: string): string {
+  return text.replace(/[_*~>#+=|{}.!-]/g, (match) => `\\${match}`);
+}

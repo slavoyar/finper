@@ -1,10 +1,9 @@
-import { quotationToNumber } from '@common/utils';
 import { PresetDto } from '@finper/shared';
 import { BondService } from '@modules/bond/bond.service';
 import { PresetService } from '@modules/preset/preset.service';
 
-import { ListBuilder } from '../builders/list.builder';
 import { BaseCommand } from './base.command';
+import { getBondList } from './bond-utils';
 import { CommandContext, CommandResult, ICommand } from './command.interface';
 
 export class PresetCommand extends BaseCommand implements ICommand {
@@ -24,16 +23,14 @@ export class PresetCommand extends BaseCommand implements ICommand {
 
     const bonds = await this.bondService.getFilteredBonds(preset as PresetDto);
 
-    const listBuilder = new ListBuilder(
-      'Список облигаций',
-      bonds,
-      (bond) => `${bond.name} - ${quotationToNumber(bond.lastPrice?.price)}`
-    );
-
     return Promise.resolve({
       message: {
         chat_id: context.chatId,
-        text: listBuilder.build(),
+        text: getBondList(bonds),
+        parse_mode: 'MarkdownV2',
+        link_preview_options: {
+          is_disabled: true,
+        },
       },
     });
   }

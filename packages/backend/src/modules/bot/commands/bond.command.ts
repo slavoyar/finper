@@ -1,11 +1,10 @@
-import { quotationToNumber } from '@common/utils';
 import { InlineKeyboardMarkup } from '@external/telegram/interfaces';
 import { PresetDto } from '@finper/shared';
 import { BondService } from '@modules/bond/bond.service';
 import { PresetService } from '@modules/preset/preset.service';
 
-import { ListBuilder } from '../builders/list.builder';
 import { BaseCommand } from './base.command';
+import { getBondList } from './bond-utils';
 import { CommandContext, CommandResult, ICommand } from './command.interface';
 
 export class BondCommand extends BaseCommand implements ICommand {
@@ -26,6 +25,10 @@ export class BondCommand extends BaseCommand implements ICommand {
         chat_id: context.chatId,
         text,
         reply_markup: keyboard,
+        parse_mode: 'MarkdownV2',
+        link_preview_options: {
+          is_disabled: true,
+        },
       },
     };
   }
@@ -63,15 +66,9 @@ export class BondCommand extends BaseCommand implements ICommand {
       count: 10,
     });
 
-    const listBuilder = new ListBuilder(
-      'Список облигаций',
-      bonds,
-      (bond) => `${bond.name} - ${quotationToNumber(bond.lastPrice?.price)}`
-    );
-
     const text =
-      'Отображаются первые 10 облигаций с минимальным риском и максимальной доходностью.\n\n Можно сконфигурировать свои фильтры в приложении';
+      'Отображаются первые 10 облигаций с минимальным риском и максимальной доходностью.\n\n Можно настроить свои фильтры в приложении (пресеты)';
 
-    return `${text}\n\n${listBuilder.build()}`;
+    return `${text}\n\n${getBondList(bonds)}`.trim();
   }
 }

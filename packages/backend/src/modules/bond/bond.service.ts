@@ -46,7 +46,7 @@ export class BondService {
         AND: [
           {
             NOT: {
-              amortizationFlag: false,
+              amortizationFlag: true,
             },
           },
           {

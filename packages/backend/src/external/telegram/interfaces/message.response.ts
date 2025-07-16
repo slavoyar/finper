@@ -23,10 +23,19 @@ export interface InlineKeyboardMarkup {
   inline_keyboard: InlineKeyboardButton[][];
 }
 
+export interface LinkPreviewOptions {
+  is_disabled?: boolean;
+  url?: string;
+  prefer_small_media?: boolean;
+  prefer_large_media?: boolean;
+  show_above_text?: boolean;
+}
+
 export interface MessageResponse {
   chat_id: number | string;
   text: string;
   parse_mode?: string;
   entities?: MessageEntity[];
   reply_markup?: ReplyKeyboardMarkup | InlineKeyboardMarkup;
+  link_preview_options?: LinkPreviewOptions;
 }
