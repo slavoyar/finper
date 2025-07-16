@@ -62,7 +62,7 @@ export class BondCronService {
   @Cron(CronExpression.EVERY_30_MINUTES)
   public async updateBondPrices() {
     this.logger.log('Updating bond prices...');
-    const bonds = await this.bondService.getBonds();
+    const bonds = await this.bondService.getBonds(false);
 
     const response = await firstValueFrom(
       this.marketdataService.getLastPrices(
@@ -135,7 +135,7 @@ export class BondCronService {
   }
 
   private async updateYields() {
-    const bonds = await this.bondService.getBonds();
+    const bonds = await this.bondService.getBonds(false);
     const result: { uid: string; ytm: number }[] = [];
     for (const bond of bonds) {
       if (!bond.maturityDate) {

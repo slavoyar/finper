@@ -1,7 +1,7 @@
 import { PrismaService } from '@common/prisma/prisma.service';
 import { BondPresetDto } from '@finper/shared';
 import { Injectable } from '@nestjs/common';
-import { Bond, Coupon, LastPrice, PrismaPromise } from '@prisma/client';
+import { Bond, Coupon, LastPrice } from '@prisma/client';
 
 @Injectable()
 export class BondService {

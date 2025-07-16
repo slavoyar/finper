@@ -17,9 +17,8 @@ export class BondCommand extends BaseCommand implements ICommand {
   }
 
   public override async execute(context: CommandContext): Promise<CommandResult> {
-    const keyboard = await this.constructInlineKeyboardMarkup();
+    const keyboard = await this.constructInlineKeyboardMarkup(context.userId);
 
-    console.log(JSON.stringify(keyboard));
     const text = await this.constructText(!!keyboard);
 
     return {
@@ -31,9 +30,12 @@ export class BondCommand extends BaseCommand implements ICommand {
     };
   }
 
-  private async constructInlineKeyboardMarkup(): Promise<InlineKeyboardMarkup | undefined> {
+  private async constructInlineKeyboardMarkup(userId?: number): Promise<InlineKeyboardMarkup | undefined> {
+    if (!userId) {
+      return undefined;
+    }
     const presetType: PresetDto['type'] = 'bond';
-    const presets = await this.presetService.getPresets(presetType);
+    const presets = await this.presetService.getPresets(presetType, userId);
     if (!presets.length) {
       return undefined;
     }

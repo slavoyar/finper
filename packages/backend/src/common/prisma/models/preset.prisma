@@ -6,4 +6,5 @@ model Preset {
   minDuration Int?
   maxDuration Int?
   count       Int?
+  userId      Int
 }
