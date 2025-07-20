@@ -1,5 +1,5 @@
 {
-  "name": "@finper/frontend",
+  "name": "@finper/ui",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite --host",
