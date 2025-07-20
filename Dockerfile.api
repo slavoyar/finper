@@ -9,7 +9,6 @@ RUN npm ci
 
 RUN npm run generate:proto --workspace=apps/api
 RUN npm run prisma:generate --workspace=apps/api
-RUN npm run prisma:generate --workspace=apps/api
 RUN npm run build --workspace=apps/api
 
 FROM node:24-alpine as runner
@@ -18,6 +17,4 @@ WORKDIR /app
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/node_modules ./node_modules
 
-
-# CMD ["ls", "/app/apps/api"]
 CMD ["node", "./apps/api/dist/main.js"]

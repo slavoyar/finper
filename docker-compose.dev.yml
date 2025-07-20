@@ -1,7 +1,6 @@
 services:
   api:
     build:
-      context: .
       dockerfile: Dockerfile.api
     ports:
       - '3000:3000'
@@ -10,7 +9,6 @@ services:
 
   ui:
     build:
-      context: .
       dockerfile: Dockerfile.ui
     ports:
       - '5173:80'
