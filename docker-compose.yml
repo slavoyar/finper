@@ -17,15 +17,11 @@ services:
     image: ghcr.io/slavoyar/finper-api:latest
     container_name: finper-api
     expose:
-      - '80'
+      - '3000'
     env_file:
       - .env
     environment:
       - NODE_ENV=production
-      - PORT=80
-      - VIRTUAL_HOST=$API_HOST
-      - LETSENCRYPT_HOST=$API_HOST
-      - LETSENCRYPT_EMAIL=slavoyarmc@gmail.com
     depends_on:
       - mongodb
     networks:
