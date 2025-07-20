@@ -4,7 +4,8 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
-  await app.listen(process.env.PORT ?? 3000);
+  app.setGlobalPrefix('api');
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 bootstrap();
