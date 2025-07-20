@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Reflector } from '@nestjs/core';
 import * as crypto from 'crypto';
 import { FastifyRequest } from 'fastify';
 
@@ -7,11 +8,19 @@ import { User } from './interfaces';
 
 @Injectable()
 export class TelegramAuthGuard implements CanActivate {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly reflector: Reflector
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
     const initData = request.headers['x-telegram-init-data'];
+
+    const handler = context.getHandler();
+    const controller = context.getClass();
+    const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [handler, controller]);
+    if (isPublic) return true;
 
     if (!initData || typeof initData !== 'string') {
       if (this.isDevMode()) {
