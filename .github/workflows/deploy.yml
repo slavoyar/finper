@@ -12,7 +12,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
 
 permissions:
   contents: read
@@ -84,14 +83,17 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      - name: Deploy to server
+      - name: Copy files
         run: |
           scp -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
           scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
           scp -o StrictHostKeyChecking=no mongo-init.js ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
+
+      - name: Deploy to server
+        run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             set -e
-            cd $DEPLOY_DIR
+            cd ${{secrets.DEPLOY_DIR}}
 
             docker compose pull
             docker compose up -d --build
