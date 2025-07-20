@@ -1,0 +1,52 @@
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: finper-mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $MONGO_APP_USER
+      MONGO_INITDB_ROOT_PASSWORD: $MONGO_APP_PASSWORD
+      MONGO_INITDB_DATABASE: $MONGO_DB
+    volumes:
+      - finper-mongo-data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - nginx-proxy
+
+  api:
+    image: ghcr.io/slavoyar/finper-api:latest
+    container_name: finper-api
+    expose:
+      - '3000'
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - VIRTUAL_HOST=$API_HOST
+      - LETSENCRYPT_HOST=$API_HOST
+      - LETSENCRYPT_EMAIL=slavoyarmc@gmail.com
+    depends_on:
+      - mongodb
+    networks:
+      - nginx-proxy
+    restart: always
+
+  ui:
+    image: ghcr.io/slavoyar/finper-ui:latest
+    container_name: finper-ui
+    expose:
+      - '80'
+    environment:
+      - VIRTUAL_HOST=$UI_HOST
+      - LETSENCRYPT_HOST=$UI_HOST
+      - LETSENCRYPT_EMAIL=slavoyarmc@gmail.com
+    networks:
+      - nginx-proxy
+    restart: always
+
+volumes:
+  finper-mongo-data:
+
+networks:
+  nginx-proxy:
+    external: true
