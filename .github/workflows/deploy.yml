@@ -2,11 +2,13 @@ name: CI/CD – Build & Deploy All
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - 'apps/**'
       - 'packages/**'
       - 'docker-compose.yml'
+      - '.github/workflows/deploy.yml'
 
 env:
   REGISTRY: ghcr.io
@@ -25,11 +27,11 @@ jobs:
       matrix:
         service:
           - name: api
-            context: apps/api
+            context: .
             dockerfile: Dockerfile.api
             image: finper-api
           - name: ui
-            context: apps/ui
+            context: .
             dockerfile: Dockerfile.ui
             image: finper-ui
 
@@ -50,6 +52,7 @@ jobs:
 
   deploy:
     name: Deploy
+    runs-on: ubuntu-latest
     needs: build-and-push
     steps:
       - name: Checkout repository
@@ -57,11 +60,26 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "DATABASE_URL=mongodb://${{ secrets.MONGO_APP_USER }}:${{ secrets.MONGO_APP_PASSWORD }}@mongodb:27017/${{ secrets.MONGO_DB }}?authSource=admin" > .env
-          echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> .env
-          echo "TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }}" >> .env
-          echo "API_HOST=${{ secrets.API_HOST }}" >> .env
-          echo "UI_HOST=${{ secrets.UI_HOST }}" >> .env
+          cat << 'EOF' > .env
+          DATABASE_URL=mongodb://${{ secrets.MONGO_APP_USER }}:${{ secrets.MONGO_APP_PASSWORD }}@mongodb:27017/${{ secrets.MONGO_DB }}?authSource=admin
+          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }}
+          API_HOST=${{ secrets.API_HOST }}
+          UI_HOST=${{ secrets.UI_HOST }}
+          MONGO_DB=${{ secrets.MONGO_DB }}
+          MONGO_APP_USER=${{ secrets.MONGO_APP_USER }}
+          MONGO_APP_PASSWORD=${{ secrets.MONGO_APP_PASSWORD }}
+          EOF
+
+      - name: Crete mongo init script
+        run: |
+          cat << 'EOF' > mongo-init.js
+          db.createUser({
+            user:   "${{ secrets.MONGO_APP_USER }}",
+            pwd:    "${{ secrets.MONGO_APP_PASSWORD }}",
+            roles: [ { role: "readWrite", db: "${{ secrets.MONGO_DB }}" } ]
+          });
+          EOF
 
       - name: Set up SSH key
         run: |
@@ -73,17 +91,10 @@ jobs:
         run: |
           scp -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
           scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
+          scp -o StrictHostKeyChecking=no mongo-init.js ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             set -e
             cd $DEPLOY_DIR
-
-            cat > mongo-init.js << INIT
-            db.createUser({
-              user:   "${{ secrets.MONGO_APP_USER }}",
-              pwd:    "${{ secrets.MONGO_APP_PASSWORD }}",
-              roles: [ { role: "readWrite", db: "${{ secrets.MONGO_DB }}" } ]
-            });
-            INIT
 
             docker compose pull
             docker compose up -d --build
