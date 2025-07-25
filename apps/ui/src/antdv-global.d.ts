@@ -34,6 +34,8 @@ declare module 'vue' {
     AMenuItem: (typeof import('ant-design-vue'))['MenuItem'];
     AFlex: (typeof import('ant-design-vue'))['Flex'];
     ASpace: (typeof import('ant-design-vue'))['Space'];
+    AResult: (typeof import('ant-design-vue'))['Result'];
+    AQrcode: (typeof import('ant-design-vue'))['Qrcode'];
     // Add more components here as needed
   }
 }
