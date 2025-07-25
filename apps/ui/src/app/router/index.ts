@@ -16,6 +16,16 @@ export const routes: Array<Route> = [
     breadcrumbName: 'Presets',
     component: () => import('@pages/PresetPage.vue'),
   },
+  {
+    path: '/privacy-policy',
+    breadcrumbName: 'Privacy Policy',
+    component: () => import('@pages/PrivacyPolicyPage.vue'),
+  },
+  {
+    path: '/terms-of-use',
+    breadcrumbName: 'Terms of Use',
+    component: () => import('@pages/TermsOfUsePage.vue'),
+  },
 ];
 
 export const router = createRouter({

@@ -29,6 +29,7 @@ declare module 'vue' {
     ALayout: (typeof import('ant-design-vue'))['Layout'];
     ALayoutHeader: (typeof import('ant-design-vue'))['LayoutHeader'];
     ALayoutContent: (typeof import('ant-design-vue'))['LayoutContent'];
+    ALayoutFooter: (typeof import('ant-design-vue'))['LayoutFooter'];
     ALayoutSider: (typeof import('ant-design-vue'))['LayoutSider'];
     AMenu: (typeof import('ant-design-vue'))['Menu'];
     AMenuItem: (typeof import('ant-design-vue'))['MenuItem'];

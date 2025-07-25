@@ -8,7 +8,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { router } from './router';
 
-const app = Telegram.WebApp.initData ? createApp(App) : createApp(TelegramOnlyPage);
+const app = Telegram.WebApp.initData || import.meta.env.DEV ? createApp(App) : createApp(TelegramOnlyPage);
 
 app.use(createPinia());
 app.use(router);

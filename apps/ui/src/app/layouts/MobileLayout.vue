@@ -9,6 +9,7 @@
         </AFloatButton>
         <router-view v-show="isCollapsed || !isMobile" />
       </ALayoutContent>
+      <AppFooter />
     </ALayout>
     <ALayoutSider
       theme="light"
@@ -43,6 +44,8 @@ import { CloseOutlined, MenuOutlined } from '@ant-design/icons-vue';
 import { useIsMobile } from '@shared/composabes';
 import { ItemType } from 'ant-design-vue';
 import { ref, watch } from 'vue';
+
+import AppFooter from './AppFooter.vue';
 
 defineProps<{
   items: ItemType[];
