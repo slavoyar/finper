@@ -1,5 +1,6 @@
 import 'ant-design-vue/dist/reset.css';
 
+import TelegramOnlyPage from '@pages/TelegramOnlyPage.vue';
 import Antd from 'ant-design-vue';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
@@ -7,9 +8,10 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { router } from './router';
 
-const app = createApp(App);
+const app = Telegram.WebApp.initData || import.meta.env.DEV ? createApp(App) : createApp(TelegramOnlyPage);
 
 app.use(createPinia());
 app.use(router);
 app.use(Antd);
+
 app.mount('#app');
