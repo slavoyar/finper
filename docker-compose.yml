@@ -1,16 +1,14 @@
 services:
   mongodb:
-    image: mongo:6.0
+    image: mongo:8.0
     container_name: finper-mongodb
     restart: always
-    command: ['mongod', '--replSet', 'rs0', '--bind_ip_all', '--auth', '--keyFile', '/etc/mongo-keyfile']
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_APP_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_APP_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_DB}
+    command: ['mongod', '--replSet', 'rs0', '--bind_ip_all', '--keyFile', '/etc/mongo-keyfile']
+    env_file:
+      - .env
     volumes:
-      - finper-mongo-data:/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      - mongo-data:/data/db
+      - ./02-init-replica.js:/docker-entrypoint-initdb.d/02-init-replica.js
       - ./mongo-keyfile:/etc/mongo-keyfile:ro
     networks:
       - nginx-proxy
@@ -18,7 +16,7 @@ services:
       test: >
         mongosh --username $MONGO_INITDB_ROOT_USERNAME --password $MONGO_INITDB_ROOT_PASSWORD \
           --eval "try { rs.status().ok } catch (e) { \
-                rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }).ok \
+                rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'finper-mongodb:27017' }] }).ok \
               }"
 
 
@@ -55,7 +53,7 @@ services:
     restart: always
 
 volumes:
-  finper-mongo-data:
+  mongo-data:
 
 networks:
   nginx-proxy:

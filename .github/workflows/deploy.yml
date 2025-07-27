@@ -60,21 +60,24 @@ jobs:
           DATABASE_URL=mongodb://${{ secrets.MONGO_APP_USER }}:${{ secrets.MONGO_APP_PASSWORD }}@mongodb:27017/${{ secrets.MONGO_DB }}?authSource=admin
           TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
           TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }}
-          API_HOST=${{ secrets.API_HOST }}
           UI_HOST=${{ secrets.UI_HOST }}
-          MONGO_DB=${{ secrets.MONGO_DB }}
-          MONGO_APP_USER=${{ secrets.MONGO_APP_USER }}
-          MONGO_APP_PASSWORD=${{ secrets.MONGO_APP_PASSWORD }}
+          MONGO_INITDB_DATABASE=${{ secrets.MONGO_DB }}
+          MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_APP_USER }}
+          MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_APP_PASSWORD }}
           EOF
 
       - name: Crete mongo init script
         run: |
-          cat << 'EOF' > mongo-init.js
-          db.createUser({
-            user:   "${{ secrets.MONGO_APP_USER }}",
-            pwd:    "${{ secrets.MONGO_APP_PASSWORD }}",
-            roles: [ { role: "readWrite", db: "${{ secrets.MONGO_DB }}" } ]
-          });
+          cat << 'EOF' > 02-init-replica.js
+          try {
+            rs.initiate({
+              _id: process.env.REPLICA_SET || "rs0",
+              members: [{ _id: 0, host: "finper-mongodb:27017" }]
+            });
+            print("Replica set initiated");
+          } catch (e) {
+            print("rs.initiate() error:", e.message);
+          }
           EOF
 
       - name: Set up SSH key
@@ -87,7 +90,6 @@ jobs:
         run: |
           scp -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
           scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
-          scp -o StrictHostKeyChecking=no mongo-init.js ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
 
       - name: Deploy to server
         run: |
