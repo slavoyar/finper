@@ -11,6 +11,10 @@ export class BotController {
   @Public()
   @Post()
   public async handleMessage(@Body() body: Update) {
-    await this.botService.handleUpdate(body);
+    try {
+      await this.botService.handleUpdate(body);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
