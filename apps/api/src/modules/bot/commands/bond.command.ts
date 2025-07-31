@@ -1,3 +1,4 @@
+import { escapeMarkdownV2 } from '@common/utils';
 import { InlineKeyboardMarkup } from '@external/telegram/interfaces';
 import { PresetDto } from '@finper/shared';
 import { BondService } from '@modules/bond/bond.service';
@@ -66,8 +67,9 @@ export class BondCommand extends BaseCommand implements ICommand {
       count: 10,
     });
 
-    const text =
-      'Отображаются первые 10 облигаций с минимальным риском и максимальной доходностью.\n\n Можно настроить свои фильтры в приложении (пресеты)';
+    const text = escapeMarkdownV2(
+      'Отображаются первые 10 облигаций с минимальным риском и максимальной доходностью.\n\nМожно настроить свои фильтры в приложении \\(пресеты\\)'
+    );
 
     return `${text}\n\n${getBondList(bonds)}`.trim();
   }

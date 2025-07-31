@@ -57,7 +57,7 @@ jobs:
       - name: Create .env file
         run: |
           cat << 'EOF' > .env
-          DATABASE_URL=mongodb://${{ secrets.MONGO_APP_USER }}:${{ secrets.MONGO_APP_PASSWORD }}@mongodb:27017/${{ secrets.MONGO_DB }}?authSource=admin
+          DATABASE_URL=mongodb://${{ secrets.MONGO_APP_USER }}:${{ secrets.MONGO_APP_PASSWORD }}@${{ secrets.MONGO_HOST }}:27017/${{ secrets.MONGO_DB }}?authSource=admin&replicaSet=rs0
           TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
           TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }}
           UI_HOST=${{ secrets.UI_HOST }}
@@ -72,7 +72,7 @@ jobs:
           try {
             rs.initiate({
               _id: process.env.REPLICA_SET || "rs0",
-              members: [{ _id: 0, host: "finper-mongodb:27017" }]
+              members: [{ _id: 0, host: "${{ secrets.MONGO_HOST }}:27017" }]
             });
             print("Replica set initiated");
           } catch (e) {

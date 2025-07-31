@@ -39,7 +39,7 @@ export const getBondList = (bonds: Bond[]) => {
 
     const duration = getDuration(bond.maturityDate!.toString());
 
-    const text = `${index + 1}. [${bond.name}](${url}) - \`${yieldValue}\`% - ${currentPrice} ${currency} - ${duration}`;
+    const text = `${index + 1}. [${bond.name}](${url}) - ${currentPrice} ${currency} - \`${yieldValue}%\` - ${duration}`;
 
     return escapeMarkdownV2(text);
   });

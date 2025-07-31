@@ -37,6 +37,8 @@ services:
       - mongodb
     networks:
       - nginx-proxy
+    cpus: 0.3
+    mem_limit: 1024m
     restart: always
 
   ui:

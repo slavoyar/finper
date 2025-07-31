@@ -2,7 +2,7 @@
   <a-layout>
     <a-layout-content>
       <a-row>
-        <a-col :span="12" :md="{ span: 18, offset: 3 }">
+        <a-col :span="24" :md="{ span: 18, offset: 3 }">
           <a-card title="Privacy Policy">
             <h2>1. Information We Collect</h2>
             <p>When you use our Telegram bot, we store:</p>

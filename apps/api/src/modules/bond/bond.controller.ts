@@ -1,4 +1,3 @@
-import { Public } from '@common/decorators/public';
 import { Controller, Get, Post, Query } from '@nestjs/common';
 
 import { BondService } from './bond.service';
@@ -19,7 +18,6 @@ export class BondController {
     return bondsDto;
   }
 
-  @Public()
   @Post('cron/update-bonds')
   public updateBonds(@Query('offset') offset = '0') {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
