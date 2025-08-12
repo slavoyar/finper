@@ -3,6 +3,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json turbo.json tsconfig.base.json ./
 COPY packages/shared ./packages/shared
+COPY packages/locales ./packages/locales
 COPY apps/ui ./apps/ui
 
 RUN npm ci

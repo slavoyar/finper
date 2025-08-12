@@ -32,6 +32,7 @@
           :style="{ lineHeight: '64px' }"
           :items="items"
           :mode="isCollapsed ? 'vertical' : 'inline'"
+          @click="toggleSidebar"
         >
         </AMenu>
       </ASpace>

@@ -3,61 +3,65 @@
     <a-layout-content>
       <a-row>
         <a-col :span="24" :md="{ span: 18, offset: 3 }">
-          <a-card title="Privacy Policy">
-            <h2>1. Information We Collect</h2>
-            <p>When you use our Telegram bot, we store:</p>
+          <a-card :title="$t('privacy.title')">
+            <h2>{{ $t('privacy.informationWeCollect') }}</h2>
+            <p>{{ $t('privacy.informationWeCollectDescription') }}</p>
             <ul>
               <li>
-                <strong>Tinkoff Investment API Token</strong> - Used for read-only access to your investment
-                portfolio
+                <strong>{{ $t('privacy.apiTokenLabel') }}</strong>
               </li>
-              <li><strong>Telegram User ID</strong> - Your unique Telegram identifier</li>
-              <li><strong>Connection Timestamp</strong> - Date/time of your last connection</li>
+              <li>
+                <strong>{{ $t('privacy.telegramUserIdLabel') }}</strong>
+              </li>
+              <li>
+                <strong>{{ $t('privacy.connectionTimestampLabel') }}</strong>
+              </li>
             </ul>
 
-            <h2>2. How We Use Your Data</h2>
-            <p>We use your information exclusively to:</p>
+            <h2>{{ $t('privacy.howWeUseYourData') }}</h2>
+            <p>{{ $t('privacy.howWeUseYourDataDescription') }}</p>
             <ul>
-              <li>Fetch and display your investment portfolio data within Telegram</li>
-              <li>Maintain secure connection between our service and Tinkoff API</li>
-              <li>Provide historical performance tracking (read-only)</li>
+              <li>{{ $t('privacy.fetchPortfolioData') }}</li>
+              <li>{{ $t('privacy.maintainSecureConnection') }}</li>
+              <li>{{ $t('privacy.historicalPerformanceTracking') }}</li>
             </ul>
 
-            <h2>3. Data Storage & Security</h2>
-            <p>All sensitive data is protected with:</p>
+            <h2>{{ $t('privacy.dataStorageSecurity') }}</h2>
+            <p>{{ $t('privacy.dataStorageSecurityDescription') }}</p>
             <ul>
-              <li>AES-256 encryption at rest</li>
-              <li>SSL/TLS encryption in transit</li>
-              <li>Strict access controls</li>
-              <li>Automatic deletion after <strong>30 days</strong> of inactivity</li>
+              <li>{{ $t('privacy.sslTlsEncryption') }}</li>
+              <li>{{ $t('privacy.strictAccessControls') }}</li>
+              <li>{{ $t('privacy.automaticDeletion') }}</li>
             </ul>
 
-            <h2>4. Data Sharing</h2>
-            <p>We <strong>never</strong> share, sell, or expose your:</p>
+            <h2>{{ $t('privacy.dataSharing') }}</h2>
+            <p>{{ $t('privacy.dataSharingDescription') }}</p>
             <ul>
-              <li>Tinkoff API tokens</li>
-              <li>Financial data</li>
-              <li>Personal identifiers</li>
+              <li>{{ $t('privacy.apiTokens') }}</li>
+              <li>{{ $t('privacy.financialData') }}</li>
+              <li>{{ $t('privacy.personalIdentifiers') }}</li>
             </ul>
-            <p>No third parties have access to your investment information.</p>
+            <p>{{ $t('privacy.noThirdParties') }}</p>
 
-            <h2>5. Your Rights</h2>
-            <p>You can:</p>
+            <h2>{{ $t('privacy.yourRights') }}</h2>
+            <p>{{ $t('privacy.yourRightsDescription') }}</p>
             <ul>
-              <li>Request immediate deletion of your data via our support channel</li>
-              <li>Revoke Tinkoff API access at any time through Tinkoff's platform</li>
-              <li>Export your stored non-sensitive data</li>
+              <li>{{ $t('privacy.requestDeletion') }}</li>
+              <li>{{ $t('privacy.revokeApiAccess') }}</li>
+              <li>{{ $t('privacy.exportData') }}</li>
             </ul>
 
-            <h2>6. Contact Information</h2>
+            <h2>{{ $t('privacy.contactInformation') }}</h2>
             <a-descriptions bordered :column="1">
-              <a-descriptions-item label="Data Controller"> Yaroslav Zaprudskii </a-descriptions-item>
-              <a-descriptions-item label="Email">
+              <a-descriptions-item :label="$t('privacy.dataController')">{{
+                $t('privacy.dataControllerValue')
+              }}</a-descriptions-item>
+              <a-descriptions-item :label="$t('privacy.emailLabel')">
                 <a :href="`mailto:${supportEmail}`">{{ supportEmail }}</a>
               </a-descriptions-item>
             </a-descriptions>
 
-            <p>Last Updated: {{ currentDate }}</p>
+            <p>{{ $t('privacy.lastUpdated', { date: currentDate }) }}</p>
           </a-card>
         </a-col>
       </a-row>
