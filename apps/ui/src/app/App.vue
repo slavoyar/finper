@@ -14,11 +14,14 @@ import { DesktopOutlined, FileOutlined } from '@ant-design/icons-vue';
 import { useIsMobile } from '@shared/composabes';
 import { ItemType } from 'ant-design-vue';
 import { h, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import DesktopLayout from './layouts/DesktopLayout.vue';
 import MobileLayout from './layouts/MobileLayout.vue';
 import { themeConfig } from './theme';
+
+const { t } = useI18n();
 const router = useRouter();
 const isMobile = useIsMobile();
 
@@ -26,7 +29,7 @@ const selectedKeys = ref(['home']);
 
 const items: ItemType[] = [
   {
-    label: 'Home',
+    label: t('common.home'),
     key: 'home',
     title: '',
     icon: () => h(DesktopOutlined),
@@ -35,7 +38,7 @@ const items: ItemType[] = [
     },
   },
   {
-    label: 'Presets',
+    label: t('presets.title'),
     key: 'presets',
     title: '',
     icon: () => h(FileOutlined),

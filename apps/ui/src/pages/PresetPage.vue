@@ -1,6 +1,6 @@
 <template>
   <ASpace direction="vertical" :style="{ width: '100%' }">
-    <APageHeader title="Presets" />
+    <APageHeader :title="$t('presets.title')" />
     <CreatePresetButton />
     <BondPresetsTable />
   </ASpace>

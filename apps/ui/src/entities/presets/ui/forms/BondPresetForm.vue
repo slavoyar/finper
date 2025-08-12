@@ -1,25 +1,25 @@
 <template>
   <AForm layout="vertical" :model="preset" :rules="rulesRef">
-    <AFormItem label="Risk Levels" v-bind="validateInfos.riskLevels">
+    <AFormItem :label="$t('presets.risk')" v-bind="validateInfos.riskLevels">
       <ASelect
         v-model:value="preset.riskLevels"
         :options="riskOptions"
         :token-separators="[',']"
         mode="tags"
         type="number"
-        placeholder="Selete risk levels"
+        :placeholder="$t('presets.riskPlaceholder')"
       />
     </AFormItem>
 
-    <AFormItem label="Count" v-bind="validateInfos.count">
+    <AFormItem :label="$t('presets.count')" v-bind="validateInfos.count">
       <AInputNumber v-model:value="preset.count" :min="5" style="width: 100%" />
     </AFormItem>
 
-    <AFormItem label="Minimum Duration">
+    <AFormItem :label="$t('presets.minDuration')">
       <AInputNumber v-model:value="preset.minDuration" :min="0" style="width: 100%" />
     </AFormItem>
 
-    <AFormItem label="Maximum Duration">
+    <AFormItem :label="$t('presets.maxDuration')">
       <AInputNumber
         v-model:value="preset.maxDuration"
         :min="preset.minDuration ?? 0 + 1"

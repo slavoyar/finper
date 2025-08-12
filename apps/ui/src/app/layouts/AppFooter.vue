@@ -1,6 +1,6 @@
 <template>
   <ALayoutFooter :style="{ textAlign: 'center' }">
-    <a href="/privacy-policy">Privacy Policy</a> | <a href="/terms-of-use">Terms of Use</a> | Finper ©2025
-    Created by Yaroslav
+    <a href="/privacy-policy">{{ $t('privacy.title') }}</a> |
+    <a href="/terms-of-use">{{ $t('terms.title') }}</a> | Finper ©2025
   </ALayoutFooter>
 </template>

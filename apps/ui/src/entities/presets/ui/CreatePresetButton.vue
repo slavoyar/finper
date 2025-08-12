@@ -1,10 +1,12 @@
 <template>
-  <AButton type="primary" @click="isOpen = true"> Create Preset </AButton>
+  <AButton type="primary" @click="isOpen = true"> {{ $t('presets.create') }} </AButton>
   <AModal
-    title="Create Preset"
+    :title="$t('presets.create')"
     :open="isOpen"
     :ok-button-props="{ disabled: !isValid || presetStore.isLoading, loading: presetStore.isLoading }"
     :cancel-button-props="{ disabled: presetStore.isLoading }"
+    :ok-text="$t('common.create')"
+    :cancel-text="$t('common.cancel')"
     @cancel="cancel"
     @ok="save"
   >

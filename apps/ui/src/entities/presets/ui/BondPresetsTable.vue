@@ -2,23 +2,23 @@
   <AdaptiveTable :columns="columns" :data-source="presetStore.bondPresets" show-header>
     <template #cardAction="{ record }">
       <APopconfirm
-        title="Are you sure you want to delete this preset?"
-        ok-text="Yes"
-        cancel-text="No"
+        :title="$t('presets.areYouSure')"
+        :ok-text="$t('common.yes')"
+        :cancel-text="$t('common.no')"
         @confirm="presetStore.deletePreset(record.id)"
       >
-        <AButton type="link">Delete</AButton>
+        <AButton type="link">{{ $t('common.delete') }}</AButton>
       </APopconfirm>
     </template>
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'action'">
         <APopconfirm
-          title="Are you sure you want to delete this preset?"
-          ok-text="Yes"
-          cancel-text="No"
+          :title="$t('presets.areYouSure')"
+          :ok-text="$t('common.yes')"
+          :cancel-text="$t('common.no')"
           @confirm="presetStore.deletePreset(record.id)"
         >
-          <AButton type="link">Delete</AButton>
+          <AButton type="link">{{ $t('common.delete') }}</AButton>
         </APopconfirm>
       </template>
     </template>
@@ -30,9 +30,11 @@ import { riskTypeByLevel } from '@shared/consts';
 import { AdaptiveTable } from '@shared/ui';
 import { TableColumnType } from 'ant-design-vue';
 import { onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { usePresetStore } from '../model';
 
+const { t } = useI18n();
 const presetStore = usePresetStore();
 
 onMounted(async () => {
@@ -41,28 +43,28 @@ onMounted(async () => {
 
 const columns: TableColumnType[] = [
   {
-    title: 'Name',
+    title: t('presets.name'),
     dataIndex: 'name',
     key: 'name',
   },
   {
-    title: 'Min Duration',
+    title: t('presets.minDuration'),
     dataIndex: 'minDuration',
     key: 'minDuration',
   },
   {
-    title: 'Max Duration',
+    title: t('presets.maxDuration'),
     dataIndex: 'maxDuration',
     key: 'maxDuration',
   },
   {
-    title: 'Risk',
+    title: t('presets.risk'),
     dataIndex: 'riskLevels',
     key: 'risk',
     customRender: ({ text }: { text: number[] }) => text.map((item) => riskTypeByLevel[item]).join(', '),
   },
   {
-    title: 'Action',
+    title: t('presets.action'),
     key: 'action',
   },
 ];

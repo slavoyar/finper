@@ -1,0 +1,156 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "reset": "Reset",
+    "apply": "Apply",
+    "select": "Select",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "bonds": {
+    "title": "Bonds",
+    "name": "Name",
+    "view": "View",
+    "yield": "Yield",
+    "price": "Price",
+    "duration": "Duration",
+    "risk": "Risk",
+    "riskLevel": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "filters": {
+      "risk": "Filter by risk",
+      "sort": "Sort by",
+      "sortOrder": {
+        "title": "Sort Order",
+        "asc": "Ascending",
+        "desc": "Descending"
+      },
+      "minDuration": "Min. Duration (Months)",
+      "maxDuration": "Max. Duration (Months)"
+    }
+  },
+  "presets": {
+    "title": "Presets",
+    "name": "Name",
+    "create": "Create Preset",
+    "namePlaceholder": "Enter preset name",
+    "minDuration": "Min. Duration (Months)",
+    "maxDuration": "Max. Duration (Months)",
+    "risk": "Risk",
+    "riskPlaceholder": "Select risk",
+    "action": "Action",
+    "count": "Count",
+    "areYouSure": "Are you sure you want to delete this preset?"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "acceptance": "1. Acceptance of Terms",
+    "acceptanceDescription": "By using this Telegram bot, you agree to these binding terms.",
+    "serviceDescription": {
+      "title": "2. Service Description",
+      "intro": "Our bot provides:",
+      "features": {
+        "1": "Read-only access to Tinkoff investment portfolios",
+        "2": "Financial data visualization within Telegram",
+        "3": "Historical performance tracking"
+      }
+    },
+    "userObligations": {
+      "title": "3. User Obligations",
+      "intro": "You agree to:",
+      "items": {
+        "1": "Provide only read-only Tinkoff API tokens",
+        "2": "Maintain security of your credentials",
+        "3": "Comply with Tinkoff's API terms",
+        "4": "Use the service only for personal purposes"
+      }
+    },
+    "apiTokenUsage": {
+      "title": "4. API Token Usage",
+      "intro": "We:",
+      "items": {
+        "1": "Store tokens using bank-grade encryption",
+        "2": "Access your portfolio only when requested by you",
+        "3": "Perform no write operations",
+        "4": "Never initiate trades or withdrawals"
+      }
+    },
+    "disclaimer": {
+      "title": "5. Disclaimer of Warranties",
+      "intro": "The service is provided \"AS IS\" without warranties of:",
+      "items": {
+        "1": "Accuracy of financial data",
+        "2": "Uninterrupted operation",
+        "3": "Fitness for specific purposes"
+      }
+    },
+    "limitationOfLiability": {
+      "title": "6. Limitation of Liability",
+      "intro": "We are not liable for any:",
+      "items": {
+        "1": "Financial losses from using this service",
+        "2": "Data inaccuracies or delays",
+        "3": "Security breaches originating outside our systems"
+      }
+    },
+    "termination": {
+      "title": "7. Termination",
+      "intro": "We may terminate access for the following reasons:",
+      "items": {
+        "1": "Violation of these terms",
+        "2": "Suspicious activity",
+        "3": "Non-usage for 90+ days"
+      }
+    },
+    "changesToTerms": "8. Changes to Terms",
+    "changesToTermsIntro": "We will notify users of material changes via Telegram 7 days before implementation.",
+    "contact": "9. Contact",
+    "legalInquiries": "Legal Inquiries",
+    "support": "Support",
+    "effectiveDate": "Effective: {date}"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "informationWeCollect": "1. Information We Collect",
+    "informationWeCollectDescription": "When you use our Telegram bot, we store:",
+    "apiTokenLabel": "Tinkoff Investment API Token - Used for read-only access to your investment portfolio",
+    "telegramUserIdLabel": "Telegram User ID - Your unique Telegram identifier",
+    "connectionTimestampLabel": "Connection Timestamp - Date/time of your last connection",
+    "howWeUseYourData": "2. How We Use Your Data",
+    "howWeUseYourDataDescription": "We use your data to:",
+    "fetchPortfolioData": "Fetch and display your investment portfolio data within Telegram",
+    "maintainSecureConnection": "Maintain secure connection between our service and Tinkoff API",
+    "historicalPerformanceTracking": "Provide historical performance tracking (read-only)",
+    "dataStorageSecurity": "3. Data Storage & Security",
+    "dataStorageSecurityDescription": "We take your data security seriously. We implement the following measures:",
+    "sslTlsEncryption": "SSL/TLS encryption in transit",
+    "strictAccessControls": "Strict access controls",
+    "automaticDeletion": "Automatic deletion after 30 days of inactivity",
+    "dataSharing": "4. Data Sharing",
+    "dataSharingDescription": "We may share your data with:",
+    "apiTokens": "Tinkoff API tokens",
+    "financialData": "Financial data",
+    "personalIdentifiers": "Personal identifiers",
+    "noThirdParties": "No third parties have access to your investment information.",
+    "yourRights": "5. Your Rights",
+    "yourRightsDescription": "You have the following rights regarding your data:",
+    "requestDeletion": "Request immediate deletion of your data via our support channel",
+    "revokeApiAccess": "Revoke Tinkoff API access at any time through Tinkoff's platform",
+    "exportData": "Export your stored non-sensitive data",
+    "contactInformation": "6. Contact Information",
+    "dataController": "Data Controller",
+    "dataControllerValue": "Yaroslav Zaprudsky",
+    "emailLabel": "Email",
+    "lastUpdated": "Last Updated: {date}"
+  }
+}

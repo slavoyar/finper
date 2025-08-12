@@ -16,7 +16,7 @@
         rel="noopener
           noreferrer"
       >
-        View
+        {{ $t('bonds.view') }}
       </ATypographyLink>
     </template>
     <template #filter>
@@ -57,6 +57,7 @@ import { AdaptiveTable } from '@shared/ui';
 import { TableColumnType } from 'ant-design-vue';
 import { FilterValue, SorterResult } from 'ant-design-vue/es/table/interface';
 import { onMounted, ref, toRef } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { useBondsStore, useFilters, usePagination } from '../model';
 import { getDuration } from '../utils';
@@ -65,6 +66,7 @@ import FilterPanel from './FilterPanel.vue';
 
 const scrollRef = ref<HTMLDivElement>();
 
+const { t } = useI18n();
 const bondStore = useBondsStore();
 const bonds = toRef(bondStore, 'bonds');
 const { selectedRisks, sortField, sortOrder, minDuration, maxDuration, filteredSortedBonds } =
@@ -76,13 +78,13 @@ onMounted(async () => {
 
 const columns: TableColumnType<BondDto>[] = [
   {
-    title: 'Name',
+    title: t('bonds.name'),
     dataIndex: 'name',
     key: 'name',
     fixed: 'left',
   },
   {
-    title: 'Yield',
+    title: t('bonds.yield'),
     dataIndex: 'yield',
     key: 'yield',
     sorter: true,
@@ -90,34 +92,34 @@ const columns: TableColumnType<BondDto>[] = [
     customRender: ({ value }) => `${(value * 100).toFixed(2)} %`,
   },
   {
-    title: 'Price',
+    title: t('bonds.price'),
     dataIndex: 'lastPrice',
     key: 'price',
     customRender: ({ value, record }: { value: number; record: BondDto }) =>
       `${value.toFixed(2)} ${record.currency}`,
   },
   {
-    title: 'Duration',
+    title: t('bonds.duration'),
     key: 'duration',
     sorter: true,
     customFilterDropdown: true,
     customRender: ({ record }) => getDuration(record.maturityDate),
   },
   {
-    title: 'Risk',
+    title: t('bonds.risk'),
     dataIndex: 'riskLevel',
     key: 'risk',
     filters: [
       {
-        text: 'Low',
+        text: t('bonds.riskLevel.low'),
         value: 1,
       },
       {
-        text: 'Medium',
+        text: t('bonds.riskLevel.medium'),
         value: 2,
       },
       {
-        text: 'High',
+        text: t('bonds.riskLevel.high'),
         value: 3,
       },
     ],

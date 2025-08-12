@@ -30,7 +30,8 @@
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.33",
-    "ajv": "^8.17.1"
+    "ajv": "^8.17.1",
+    "vue-i18n": "^11.1.11"
   },
   "packageManager": "npm@11.4.2"
 }

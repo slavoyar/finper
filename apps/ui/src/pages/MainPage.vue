@@ -1,6 +1,6 @@
 <template>
   <ASpace direction="vertical" :style="{ width: '100%' }">
-    <APageHeader title="Bonds" />
+    <APageHeader :title="$t('bonds.title')" />
     <BondsList />
   </ASpace>
 </template>

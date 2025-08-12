@@ -1,7 +1,7 @@
 <template>
   <AForm layout="vertical">
-    <AFormItem label="Name" required>
-      <AInput v-model:value="preset.name" placeholder="Preset name" />
+    <AFormItem :label="$t('presets.name')" required>
+      <AInput v-model:value="preset.name" :placeholder="$t('presets.namePlaceholder')" />
     </AFormItem>
   </AForm>
   <component :is="getFormComponent(type)" v-model:preset="preset" v-model:is-valid="isValid" />
