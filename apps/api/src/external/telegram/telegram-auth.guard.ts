@@ -60,7 +60,7 @@ export class TelegramAuthGuard implements CanActivate {
     return true;
   }
 
-  isDevMode(): boolean {
+  private isDevMode(): boolean {
     return this.configService.get('NODE_ENV') === 'development';
   }
 }

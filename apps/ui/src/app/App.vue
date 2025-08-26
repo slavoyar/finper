@@ -1,11 +1,11 @@
 <template>
-  <AConfigProvider :theme="themeConfig">
+  <a-config-provider :theme="themeConfig">
     <component
       :is="isMobile ? MobileLayout : DesktopLayout"
       v-model:selected-keys="selectedKeys"
       :items="items"
     />
-  </AConfigProvider>
+  </a-config-provider>
 </template>
 
 <script setup lang="ts">
