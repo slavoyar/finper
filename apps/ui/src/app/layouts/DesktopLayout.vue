@@ -1,15 +1,15 @@
 <template>
-  <ALayout style="min-height: 100vh">
-    <ALayoutSider width="300px" theme="light">
-      <AMenu v-model:selected-keys="selectedKeys" :items="items"> </AMenu>
-    </ALayoutSider>
-    <ALayout>
-      <ALayoutContent :style="{ padding: '20px 50px', height: '100%' }">
+  <a-layout style="min-height: 100vh">
+    <a-layout-sider width="300px" theme="light">
+      <a-menu v-model:selected-keys="selectedKeys" :items="items" />
+    </a-layout-sider>
+    <a-layout>
+      <a-layout-content :style="{ padding: '20px 50px', height: '100%' }">
         <router-view />
-      </ALayoutContent>
+      </a-layout-content>
       <AppFooter />
-    </ALayout>
-  </ALayout>
+    </a-layout>
+  </a-layout>
 </template>
 
 <script setup lang="ts">
