@@ -26,6 +26,11 @@ export const routes: Array<Route> = [
     breadcrumbName: 'Terms of Use',
     component: () => import('@pages/TermsOfUsePage.vue'),
   },
+  {
+    path: '/dashboard',
+    breadcrumbName: 'Dashboard',
+    component: () => import('@pages/DashboardPage.vue'),
+  },
 ];
 
 export const router = createRouter({
