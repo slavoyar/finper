@@ -1,0 +1,36 @@
+model Category {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  userId   Int
+}
+
+model Limit {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId String
+  amount     Float
+  period     Period
+  userId     Int
+}
+
+model Transaction {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  categoryId  String
+  type        TransactionType
+  amount      Float
+  date        DateTime
+  startDate   DateTime?
+  endDate     DateTime?
+  recurrence  Period?
+  userId      Int
+}
+
+enum Period {
+  monthly
+  yearly
+}
+
+enum TransactionType {
+  income
+  expense
+}

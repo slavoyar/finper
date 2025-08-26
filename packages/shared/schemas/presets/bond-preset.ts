@@ -17,6 +17,7 @@ export const BondPresetSchema = Type.Intersect([
   BondPresetDataSchema,
 ]);
 
-export type BondPresetDto = Static<typeof BondPresetSchema>;
+export const CreateBondPresetSchema = Type.Omit(BondPresetSchema, ['id']);
 
-export type CreateBondPresetDto = Omit<BondPresetDto, 'id'>;
+export type BondPresetDto = Static<typeof BondPresetSchema>;
+export type CreateBondPresetDto = Static<typeof CreateBondPresetSchema>;

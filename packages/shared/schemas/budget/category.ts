@@ -5,5 +5,9 @@ export const CategorySchema = Type.Object({
   name: Type.String(),
 });
 
+export const CreateCategorySchema = Type.Omit(CategorySchema, ['id']);
+export const UpdateCategorySchema = Type.Partial(CreateCategorySchema);
+
 export type CategoryDto = Static<typeof CategorySchema>;
-export type CreateCategoryDto = Omit<CategoryDto, 'id'>;
+export type CreateCategoryDto = Static<typeof CreateCategorySchema>;
+export type UpdateCategoryDto = Static<typeof UpdateCategorySchema>;

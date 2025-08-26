@@ -7,6 +7,11 @@ export const LimitSchema = Type.Object({
   period: Type.Union([Type.Literal('monthly'), Type.Literal('yearly')]),
 });
 
+export const CreateLimitSchema = Type.Omit(LimitSchema, ['id']);
+export const UpdateLimitSchema = Type.Partial(CreateLimitSchema);
+
 export type LimitDto = Static<typeof LimitSchema>;
-export type CreateLimitDto = Omit<LimitDto, 'id'>;
+export type CreateLimitDto = Static<typeof CreateLimitSchema>;
+export type UpdateLimitDto = Static<typeof UpdateLimitSchema>;
+
 export type LimitPeriod = LimitDto['period'];

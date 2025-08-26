@@ -31,6 +31,9 @@
   "dependencies": {
     "@sinclair/typebox": "^0.34.33",
     "ajv": "^8.17.1",
+    "dayjs": "^1.11.13",
+    "echarts": "^5.6.0",
+    "vue-echarts": "^7.0.3",
     "vue-i18n": "^11.1.11"
   },
   "packageManager": "npm@11.4.2"

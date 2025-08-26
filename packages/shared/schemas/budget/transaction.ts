@@ -12,7 +12,11 @@ export const TransactionSchema = Type.Object({
   recurrence: Type.Optional(Type.Union([Type.Literal('monthly'), Type.Literal('yearly')])),
 });
 
+export const CreateTransactionSchema = Type.Omit(TransactionSchema, ['id']);
+export const UpdateTransactionSchema = Type.Partial(CreateTransactionSchema);
+
 export type TransactionDto = Static<typeof TransactionSchema>;
-export type CreateTransactionDto = Omit<TransactionDto, 'id'>;
+export type CreateTransactionDto = Static<typeof CreateTransactionSchema>;
+export type UpdateTransactionDto = Static<typeof UpdateTransactionSchema>;
 export type TransactionType = TransactionDto['type'];
 export type Recurrence = TransactionDto['recurrence'];
