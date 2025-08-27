@@ -1,0 +1,13 @@
+{
+  "title": "Presets",
+  "name": "Name",
+  "create": "Create Preset",
+  "namePlaceholder": "Enter preset name",
+  "minDuration": "Min. Duration (Months)",
+  "maxDuration": "Max. Duration (Months)",
+  "risk": "Risk",
+  "riskPlaceholder": "Select risk",
+  "action": "Action",
+  "count": "Count",
+  "areYouSure": "Are you sure you want to delete this preset?"
+}

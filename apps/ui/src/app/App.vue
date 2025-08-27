@@ -31,7 +31,6 @@ const items: ItemType[] = [
   {
     label: t('common.home'),
     key: 'home',
-    title: '',
     icon: () => h(DesktopOutlined),
     onClick: () => {
       router.push('/');
@@ -40,10 +39,17 @@ const items: ItemType[] = [
   {
     label: t('presets.title'),
     key: 'presets',
-    title: '',
     icon: () => h(FileOutlined),
     onClick: () => {
       router.push('/presets');
+    },
+  },
+  {
+    label: t('budget.title'),
+    key: 'budget',
+    icon: () => h(FileOutlined),
+    onClick: () => {
+      router.push('/budget');
     },
   },
 ];

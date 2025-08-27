@@ -1,0 +1,12 @@
+{
+  "category": {
+    "create": "Create Category",
+    "name": "Name",
+    "namePlaceholder": "Enter category name",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter category description"
+  },
+  "budget": {
+    "title": "Budget"
+  }
+}

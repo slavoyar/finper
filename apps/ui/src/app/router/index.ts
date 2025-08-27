@@ -31,6 +31,11 @@ export const routes: Array<Route> = [
     breadcrumbName: 'Dashboard',
     component: () => import('@pages/DashboardPage.vue'),
   },
+  {
+    path: '/budget',
+    breadcrumbName: 'Budget',
+    component: () => import('@pages/BudgetPage.vue'),
+  },
 ];
 
 export const router = createRouter({

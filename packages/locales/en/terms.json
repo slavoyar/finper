@@ -1,0 +1,67 @@
+{
+  "title": "Terms of Service",
+  "acceptance": "1. Acceptance of Terms",
+  "acceptanceDescription": "By using this Telegram bot, you agree to these binding terms.",
+  "serviceDescription": {
+    "title": "2. Service Description",
+    "intro": "Our bot provides:",
+    "features": {
+      "1": "Read-only access to Tinkoff investment portfolios",
+      "2": "Financial data visualization within Telegram",
+      "3": "Historical performance tracking"
+    }
+  },
+  "userObligations": {
+    "title": "3. User Obligations",
+    "intro": "You agree to:",
+    "items": {
+      "1": "Provide only read-only Tinkoff API tokens",
+      "2": "Maintain security of your credentials",
+      "3": "Comply with Tinkoff's API terms",
+      "4": "Use the service only for personal purposes"
+    }
+  },
+  "apiTokenUsage": {
+    "title": "4. API Token Usage",
+    "intro": "We:",
+    "items": {
+      "1": "Store tokens using bank-grade encryption",
+      "2": "Access your portfolio only when requested by you",
+      "3": "Perform no write operations",
+      "4": "Never initiate trades or withdrawals"
+    }
+  },
+  "disclaimer": {
+    "title": "5. Disclaimer of Warranties",
+    "intro": "The service is provided \"AS IS\" without warranties of:",
+    "items": {
+      "1": "Accuracy of financial data",
+      "2": "Uninterrupted operation",
+      "3": "Fitness for specific purposes"
+    }
+  },
+  "limitationOfLiability": {
+    "title": "6. Limitation of Liability",
+    "intro": "We are not liable for any:",
+    "items": {
+      "1": "Financial losses from using this service",
+      "2": "Data inaccuracies or delays",
+      "3": "Security breaches originating outside our systems"
+    }
+  },
+  "termination": {
+    "title": "7. Termination",
+    "intro": "We may terminate access for the following reasons:",
+    "items": {
+      "1": "Violation of these terms",
+      "2": "Suspicious activity",
+      "3": "Non-usage for 90+ days"
+    }
+  },
+  "changesToTerms": "8. Changes to Terms",
+  "changesToTermsIntro": "We will notify users of material changes via Telegram 7 days before implementation.",
+  "contact": "9. Contact",
+  "legalInquiries": "Legal Inquiries",
+  "support": "Support",
+  "effectiveDate": "Effective: {date}"
+}

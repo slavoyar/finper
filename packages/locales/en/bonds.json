@@ -1,0 +1,25 @@
+{
+  "title": "Bonds",
+  "name": "Name",
+  "view": "View",
+  "yield": "Yield",
+  "price": "Price",
+  "duration": "Duration",
+  "risk": "Risk",
+  "riskLevel": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "filters": {
+    "risk": "Filter by risk",
+    "sort": "Sort by",
+    "sortOrder": {
+      "title": "Sort Order",
+      "asc": "Ascending",
+      "desc": "Descending"
+    },
+    "minDuration": "Min. Duration (Months)",
+    "maxDuration": "Max. Duration (Months)"
+  }
+}
