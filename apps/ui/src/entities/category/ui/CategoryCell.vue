@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 
 import { useCategoryStore } from '../model';
 
@@ -12,10 +12,6 @@ const props = defineProps<{
 }>();
 
 const categoryStore = useCategoryStore();
-
-onMounted(async () => {
-  await categoryStore.getCategories();
-});
 
 const category = computed(() => {
   return categoryStore.categories.find((cat) => cat.id === props.categoryId);

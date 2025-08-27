@@ -1,12 +1,25 @@
-import { CategoryDto } from '@finper/shared';
+import { CategoryDto, CreateCategoryDto } from '@finper/shared';
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+
+import { categoryService } from '../api';
 
 export const useCategoryStore = defineStore('category', () => {
   const categories = ref<CategoryDto[]>([]);
+  onMounted(async () => {
+    categories.value = await categoryService.getCategories();
+  });
 
-  const getCategories = async () => {
-    // Placeholder for fetching categories
+  const createCategory = async (category: CreateCategoryDto) => {
+    const newCategory = await categoryService.addCategory(category);
+    categories.value.push(newCategory);
+    return newCategory;
   };
-  return { categories, getCategories };
+
+  const deleteCategory = async (categoryId: string) => {
+    await categoryService.deleteCategory(categoryId);
+    categories.value = categories.value.filter((c) => c.id !== categoryId);
+  };
+
+  return { categories, createCategory, deleteCategory };
 });

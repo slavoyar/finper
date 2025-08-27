@@ -15,3 +15,5 @@ export type CreateLimitDto = Static<typeof CreateLimitSchema>;
 export type UpdateLimitDto = Static<typeof UpdateLimitSchema>;
 
 export type LimitPeriod = LimitDto['period'];
+
+export const limitPeriods: LimitPeriod[] = ['monthly', 'yearly'];

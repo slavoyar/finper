@@ -3,6 +3,7 @@ import { type Static, Type } from '@sinclair/typebox';
 export const CategorySchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
+  description: Type.Optional(Type.String()),
 });
 
 export const CreateCategorySchema = Type.Omit(CategorySchema, ['id']);

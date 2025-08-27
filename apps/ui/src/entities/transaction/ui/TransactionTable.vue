@@ -1,5 +1,5 @@
 <template>
-  <AdaptiveTable :columns="columns">
+  <AdaptiveTable :columns="columns" :data-source="transactionStore.transactions">
     <template #bodyCell="{ column, record }">
       <slot name="category" v-if="column.dataIndex === 'category'" :category-id="record.categoryId" />
     </template>

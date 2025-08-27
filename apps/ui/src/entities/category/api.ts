@@ -7,7 +7,7 @@ class CategoryService extends BaseService {
   }
 
   addCategory(category: Omit<CategoryDto, 'id'>) {
-    return this.api.post(category);
+    return this.api.post<CategoryDto>(category);
   }
 
   updateCategory(category: CategoryDto) {
