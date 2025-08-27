@@ -6,7 +6,7 @@ import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 
 import { LimitService } from './limit.service';
 
-@Controller('budget/limit')
+@Controller('budget/limits')
 export class LimitController {
   constructor(private readonly limitService: LimitService) {}
   @Get()

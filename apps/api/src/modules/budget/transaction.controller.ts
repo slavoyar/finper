@@ -11,7 +11,7 @@ import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 
 import { TransactionService } from './transaction.service';
 
-@Controller('budget/transaction')
+@Controller('budget/transactions')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 

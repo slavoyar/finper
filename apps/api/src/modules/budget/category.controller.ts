@@ -11,9 +11,10 @@ import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 
 import { CategoryService } from './category.service';
 
-@Controller('budget/category')
+@Controller('budget/categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
+
   @Get()
   findAll(@User() user: UserType) {
     return this.categoryService.getCategories(user.id);
