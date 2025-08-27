@@ -1,9 +1,14 @@
 import { type Static, Type } from '@sinclair/typebox';
 
+const LimitSchema = Type.Object({
+  amount: Type.Number({ minimum: 0 }),
+  period: Type.Union([Type.Literal('monthly'), Type.Literal('yearly')]),
+});
+
 export const CategorySchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
-  description: Type.Optional(Type.String()),
+  limit: Type.Optional(LimitSchema),
 });
 
 export const CreateCategorySchema = Type.Omit(CategorySchema, ['id']);
