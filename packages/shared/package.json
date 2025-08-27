@@ -1,9 +1,15 @@
 {
   "name": "@finper/shared",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
-    "lint": "eslint . --ext .ts,.tsx,.cts,.mts --fix"
+    "lint": "eslint . --ext .ts,.tsx,.cts,.mts --fix",
+    "build": "tsc -b",
+    "dev": "tsc -w -p ."
   },
   "author": "Yaroslav Zaprudskii"
 }
