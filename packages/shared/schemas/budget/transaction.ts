@@ -18,5 +18,6 @@ export const UpdateTransactionSchema = Type.Partial(CreateTransactionSchema);
 export type TransactionDto = Static<typeof TransactionSchema>;
 export type CreateTransactionDto = Static<typeof CreateTransactionSchema>;
 export type UpdateTransactionDto = Static<typeof UpdateTransactionSchema>;
+
 export type TransactionType = TransactionDto['type'];
 export type Recurrence = TransactionDto['recurrence'];

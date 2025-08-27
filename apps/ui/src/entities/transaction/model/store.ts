@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 import { transactionService } from '../api';
 
-export const useTrasactionStore = defineStore('transaction', () => {
+export const useTransactionStore = defineStore('transaction', () => {
   const transactions = ref<TransactionDto[]>([]);
 
   const getTransactions = async () => {
