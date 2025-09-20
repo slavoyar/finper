@@ -3,8 +3,16 @@
     "create": "Create Category",
     "name": "Name",
     "namePlaceholder": "Enter category name",
-    "description": "Description",
-    "descriptionPlaceholder": "Enter category description"
+    "withLimit": "With Limit",
+    "limitAmount": "Limit Amount",
+    "limitAmountPlaceholder": "Enter limit amount",
+    "limitPeriod": "Limit Period",
+    "limitPeriodPlaceholder": "Select limit period",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "categoryNameRequired": "Category name is required",
+    "limitAmountRequired": "Limit amount is required",
+    "limitPeriodRequired": "Limit period is required"
   },
   "budget": {
     "title": "Budget"

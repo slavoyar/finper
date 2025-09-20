@@ -4,10 +4,7 @@ import { defineConfig } from 'vite';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    // vueDevTools()
-  ],
+  plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {
       '@app': path.resolve(__dirname, 'src/app'),

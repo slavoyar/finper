@@ -19,4 +19,4 @@ class CategoryService extends BaseService {
   }
 }
 
-export const categoryService = new CategoryService('budget/categories');
+export const categoryService = new CategoryService('api/budget/categories');

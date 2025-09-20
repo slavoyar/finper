@@ -1,5 +1,5 @@
 <template>
-  <AButton type="primary" @click="isOpen = true"> {{ $t('presets.create') }} </AButton>
+  <AButton type="primary" @click="open"> {{ $t('presets.create') }} </AButton>
   <AModal
     :title="$t('presets.create')"
     :open="isOpen"
@@ -7,42 +7,35 @@
     :cancel-button-props="{ disabled: presetStore.isLoading }"
     :ok-text="$t('common.create')"
     :cancel-text="$t('common.cancel')"
-    @cancel="cancel"
+    @cancel="close"
     @ok="save"
   >
-    <PresetForm v-model:preset="preset" :type="type" v-model:is-valid="isValid" />
+    <PresetForm v-model:preset="data" :type="type" v-model:is-valid="isValid" />
   </AModal>
 </template>
 
 <script lang="ts" setup>
 import { PresetDto } from '@finper/shared';
+import { useModal } from '@shared/composabes';
 import { ref } from 'vue';
 
 import { usePresetStore } from '../model';
 import PresetForm from './PresetForm.vue';
 
 const presetStore = usePresetStore();
+const { isOpen, isValid, data, open, close } = useModal<PresetDto>();
 
-const isOpen = ref(false);
-const isValid = ref(false);
 const type = ref<PresetDto['type']>('bond');
-const preset = ref({});
-
-const cancel = () => {
-  isOpen.value = false;
-  isValid.value = false;
-  preset.value = {};
-};
 
 const save = async () => {
   await presetStore.createPreset({
-    ...preset.value,
+    ...data.value,
     type: type.value,
   } as PresetDto);
   if (presetStore.isError) {
     // TODO: add notification that preset was not created
     return;
   }
-  cancel();
+  close();
 };
 </script>
