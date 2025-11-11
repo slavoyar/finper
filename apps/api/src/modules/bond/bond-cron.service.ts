@@ -40,22 +40,26 @@ export class BondCronService {
       );
   }
 
-  @Cron('0 2 * * *', { timeZone: 'Europe/Moscow' })
+  @Cron(CronExpression.EVERY_6_HOURS)
   public async updateBonds(offset = 0) {
     const freshBonds = await this.getBonds();
     const bonds = await this.bondService.getBonds(false);
 
     const oldBonds = bonds.filter((bond) => !freshBonds.find((b) => b.uid === bond.uid));
+    this.logger.log(`Found ${oldBonds.length} old bonds to remove`);
     await this.removeOldBonds(oldBonds);
+    this.logger.log('Old bonds removed');
 
-    const newBonds = freshBonds.filter((bond) => !bonds.find((b) => b.uid === bond.uid));
-    await this.bondService.updateOrInsertBonds(newBonds);
-    await this.fillCoupons(newBonds, offset);
+    this.logger.log('Updating or inserting bonds...');
+    await this.bondService.updateOrInsertBonds(freshBonds);
+    this.logger.log('Bonds updated or inserted');
+
+    await this.fillCoupons(freshBonds, offset);
 
     this.logger.log('Updating bond info');
     await this.bondService.updateCoupons();
+    this.logger.log('Coupons updated');
     await this.updateYields();
-
     this.logger.log('Bonds updated');
   }
 
@@ -139,6 +143,7 @@ export class BondCronService {
     const result: { uid: string; ytm: number }[] = [];
     for (const bond of bonds) {
       if (!bond.maturityDate) {
+        this.logger.log(`Skipping YTM calculation for bond "${bond.ticker}" due to missing maturity date`);
         continue;
       }
       const nominal = quotationToNumber(bond.nominal);
@@ -146,6 +151,9 @@ export class BondCronService {
       const accumulatedCoupon = quotationToNumber(bond.aciValue);
 
       if (!nominal || !lastPrice || accumulatedCoupon === null) {
+        this.logger.log(
+          `Skipping YTM calculation for bond "${bond.ticker}" due to missing data: nominal=${nominal}, lastPrice=${lastPrice}, accumulatedCoupon=${accumulatedCoupon}`
+        );
         continue;
       }
       lastPrice = (lastPrice / 100) * nominal;
