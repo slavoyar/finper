@@ -63,7 +63,7 @@ export class BondCronService {
     this.logger.log('Bonds updated');
   }
 
-  @Cron(CronExpression.EVERY_30_MINUTES)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   public async updateBondPrices() {
     this.logger.log('Updating bond prices...');
     const bonds = await this.bondService.getBonds(false);
