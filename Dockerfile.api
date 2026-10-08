@@ -1,20 +1,26 @@
 FROM node:24-alpine AS builder
 WORKDIR /app
 
+RUN apk add --no-cache openssl
+
 COPY package.json package-lock.json turbo.json tsconfig.base.json ./
 COPY packages/shared ./packages/shared
 COPY apps/api ./apps/api
 
 RUN npm ci
 
+ENV DATABASE_URL=postgresql://postgres:postgres@localhost:5432/finper
 RUN npm run generate:proto --workspace=apps/api
 RUN npm run prisma:generate --workspace=apps/api
 RUN npm run build --workspace=apps/api
 
-FROM node:24-alpine as runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 
+RUN apk add --no-cache openssl
+
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/src/common/prisma ./apps/api/src/common/prisma
 COPY --from=builder /app/node_modules ./node_modules
 
-CMD ["node", "./apps/api/dist/main.js"]
+CMD ["sh", "-c", "node_modules/.bin/prisma migrate deploy --schema apps/api/src/common/prisma/schema.prisma && node apps/api/dist/main.js"]
