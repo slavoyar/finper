@@ -1,8 +1,5 @@
 <template>
-  <ASpace direction="vertical" :style="{ width: '100%' }">
-    <APageHeader :title="$t('bonds.title')" />
-    <BondsList />
-  </ASpace>
+  <BondsList />
 </template>
 
 <script setup lang="ts">

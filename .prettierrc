@@ -1,5 +1,4 @@
 {
-  "plugins": ["prettier-plugin-tailwindcss"],
   "endOfLine": "lf",
   "printWidth": 110,
   "proseWrap": "never",

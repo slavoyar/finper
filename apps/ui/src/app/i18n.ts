@@ -11,4 +11,6 @@ const i18n = createI18n({
   messages,
 });
 
+document.documentElement.lang = currentLocale;
+
 export default i18n;

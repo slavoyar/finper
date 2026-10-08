@@ -1,148 +1,250 @@
 <template>
-  <div ref="scrollRef" />
-  <AdaptiveTable
-    :loading="bondStore.isLoading"
-    :columns="columns"
-    :data-source="filteredSortedBonds"
-    :row-key="(record) => record.id"
-    :pagination="bondStore.isLoading && !filteredSortedBonds.length ? false : pagination"
-    show-header
-    @change="onTableChange"
+  <FilterPanel
+    v-model:selected-risks="selectedRisks"
+    v-model:sort-field="sortField"
+    v-model:sort-order="sortOrder"
+    v-model:min-duration="minDuration"
+    v-model:max-duration="maxDuration"
+    :shown="filteredSortedBonds.length"
+    :total="bonds.length"
+    :listed="listed"
+    :months-constrain="monthsConstrain"
+    @reset="resetFilters"
+  />
+
+  <div v-if="bondStore.isLoading && !bondStore.bonds.length" class="state" role="status">
+    <p>{{ t('bonds.loading') }}</p>
+    <van-skeleton title :row="6" />
+  </div>
+
+  <van-empty
+    v-else-if="bondStore.isError && !bondStore.bonds.length"
+    class="quiet-empty"
+    :description="t('bonds.loadFailed')"
+    role="alert"
   >
-    <template #cardAction="{ record }">
-      <ATypographyLink
-        :href="`https://www.tbank.ru/invest/bonds/${record.ticker}/`"
+    <template #image><span class="empty-mark" /></template>
+    <van-button type="primary" block @click="bondStore.fetchBonds()">{{ t('bonds.retry') }}</van-button>
+  </van-empty>
+
+  <van-empty
+    v-else-if="!filteredSortedBonds.length"
+    class="quiet-empty"
+    :description="emptyDescription"
+    role="status"
+  >
+    <template #image><span class="empty-mark" /></template>
+    <van-button type="primary" block @click="emptyAction">{{ emptyActionLabel }}</van-button>
+  </van-empty>
+
+  <template v-else>
+    <van-cell-group inset>
+      <van-cell
+        v-for="bond in pageBonds"
+        :key="bond.id"
+        tag="a"
+        :href="bondUrl(bond.ticker)"
         target="_blank"
-        rel="noopener
-          noreferrer"
+        rel="noopener noreferrer"
+        :title="bond.name"
+        :label="bondMeta(bond)"
+        :aria-label="bondLabel(bond)"
+        is-link
+        @click="openBond($event, bond.ticker)"
       >
-        {{ $t('bonds.view') }}
-      </ATypographyLink>
-    </template>
-    <template #filter>
-      <FilterPanel
-        v-model:selected-risks="selectedRisks"
-        v-model:sort-field="sortField"
-        v-model:sort-order="sortOrder"
-        v-model:min-duration="minDuration"
-        v-model:max-duration="maxDuration"
-      />
-    </template>
-    <template #bodyCell="{ column, record }">
-      <template v-if="column.key === 'name'">
-        <ATypographyLink
-          :href="`https://www.tbank.ru/invest/bonds/${record.ticker}/`"
-          target="_blank"
-          rel="noopener
-          noreferrer"
-        >
-          {{ record.name }}
-        </ATypographyLink>
-      </template>
-    </template>
-    <template #customFilterDropdown>
-      <DurationFilter v-model:min-duration="minDuration" v-model:max-duration="maxDuration" />
-    </template>
-    <template #customFilterIcon>
-      <FilterFilled :style="{ color: minDuration || maxDuration ? '#108ee9' : undefined }" />
-    </template>
-  </AdaptiveTable>
+        <template #value>
+          <span class="yield">{{ formatYield(bond.yield) }}</span>
+        </template>
+      </van-cell>
+    </van-cell-group>
+
+    <van-pagination
+      v-if="filteredSortedBonds.length > pageSize"
+      v-model="page"
+      :total-items="filteredSortedBonds.length"
+      :items-per-page="pageSize"
+      :show-page-size="5"
+      force-ellipses
+    />
+  </template>
 </template>
 
 <script setup lang="ts">
-import { FilterFilled } from '@ant-design/icons-vue';
 import { BondDto } from '@finper/shared';
 import { riskTypeByLevel } from '@shared/consts';
-import { AdaptiveTable } from '@shared/ui';
-import { TableColumnType } from 'ant-design-vue';
-import { FilterValue, SorterResult } from 'ant-design-vue/es/table/interface';
-import { onMounted, ref, toRef } from 'vue';
+import { computed, onMounted, ref, toRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useBondsStore, useFilters, usePagination } from '../model';
-import { getDuration } from '../utils';
-import DurationFilter from './DurationFilter.vue';
+import { useBondsStore, useFilters } from '../model';
+import { describeMonths, getDuration, riskSummary } from '../utils';
 import FilterPanel from './FilterPanel.vue';
-
-const scrollRef = ref<HTMLDivElement>();
 
 const { t } = useI18n();
 const bondStore = useBondsStore();
 const bonds = toRef(bondStore, 'bonds');
-const { selectedRisks, sortField, sortOrder, minDuration, maxDuration, filteredSortedBonds } =
-  useFilters(bonds);
+const {
+  selectedRisks,
+  sortField,
+  sortOrder,
+  minDuration,
+  maxDuration,
+  filteredSortedBonds,
+  monthsConstrain,
+  resetFilters,
+  clearDuration,
+  swapDuration,
+} = useFilters(bonds);
 
-onMounted(async () => {
-  await bondStore.fetchBonds();
+const page = ref(1);
+const pageSize = 10;
+
+const listed = computed(() => !bondStore.isLoading && !(bondStore.isError && !bondStore.bonds.length));
+
+const pageBonds = computed(() => {
+  const start = (page.value - 1) * pageSize;
+  return filteredSortedBonds.value.slice(start, start + pageSize);
 });
 
-const columns: TableColumnType<BondDto>[] = [
-  {
-    title: t('bonds.name'),
-    dataIndex: 'name',
-    key: 'name',
-    fixed: 'left',
-  },
-  {
-    title: t('bonds.yield'),
-    dataIndex: 'yield',
-    key: 'yield',
-    sorter: true,
-    defaultSortOrder: 'descend',
-    customRender: ({ value }) => `${(value * 100).toFixed(2)} %`,
-  },
-  {
-    title: t('bonds.price'),
-    dataIndex: 'lastPrice',
-    key: 'price',
-    customRender: ({ value, record }: { value: number; record: BondDto }) =>
-      `${value.toFixed(2)} ${record.currency}`,
-  },
-  {
-    title: t('bonds.duration'),
-    key: 'duration',
-    sorter: true,
-    customFilterDropdown: true,
-    customRender: ({ record }) => getDuration(record.maturityDate),
-  },
-  {
-    title: t('bonds.risk'),
-    dataIndex: 'riskLevel',
-    key: 'risk',
-    filters: [
-      {
-        text: t('bonds.riskLevel.low'),
-        value: 1,
-      },
-      {
-        text: t('bonds.riskLevel.medium'),
-        value: 2,
-      },
-      {
-        text: t('bonds.riskLevel.high'),
-        value: 3,
-      },
-    ],
-    defaultFilteredValue: ['1'],
-    customRender: ({ value }) => riskTypeByLevel[value as number],
-  },
-];
+const minAboveMax = computed(
+  () => minDuration.value != null && maxDuration.value != null && minDuration.value > maxDuration.value
+);
 
-const onTableChange = (
-  _: unknown,
-  filters: Record<string, FilterValue | null>,
-  sorter: SorterResult | SorterResult[]
-) => {
-  selectedRisks.value = (filters.risk as number[]) ?? [];
-  if (!Array.isArray(sorter)) {
-    sortField.value = sorter.columnKey as 'yield' | 'duration';
-    sortOrder.value = sorter.order as 'ascend' | 'descend';
+const emptyDescription = computed(() => {
+  if (minAboveMax.value) {
+    return t('bonds.durationOrder');
   }
+  const risks = riskSummary(selectedRisks.value);
+  const months = describeMonths(minDuration.value, maxDuration.value);
+  if (months) {
+    return t('bonds.emptyMonths', { months, risks });
+  }
+  return t('bonds.emptyRisk', { risks });
+});
+
+const emptyActionLabel = computed(() => {
+  if (minAboveMax.value) {
+    return t('bonds.swapMonths');
+  }
+  if (minDuration.value != null || maxDuration.value != null) {
+    return t('bonds.clearMonths');
+  }
+  return t('common.reset');
+});
+
+const emptyAction = () => {
+  if (minAboveMax.value) {
+    swapDuration();
+    return;
+  }
+  if (minDuration.value != null || maxDuration.value != null) {
+    clearDuration();
+    return;
+  }
+  resetFilters();
 };
 
-const scrollToTop = () => {
-  scrollRef.value?.scrollIntoView({ behavior: 'smooth' });
-};
+watch(
+  () => filteredSortedBonds.value.length,
+  (length) => {
+    const maxPage = Math.max(1, Math.ceil(length / pageSize));
+    if (page.value > maxPage) {
+      page.value = 1;
+    }
+  }
+);
 
-const pagination = usePagination(filteredSortedBonds, scrollToTop);
+watch(page, () => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+});
+
+onMounted(() => {
+  void bondStore.fetchBonds();
+});
+
+const formatYield = (value?: number) => `${((value ?? 0) * 100).toFixed(2)}%`;
+
+const bondMeta = (bond: BondDto) =>
+  `${bond.lastPrice.toFixed(2)} ${bond.currency} · ${getDuration(bond.maturityDate)} · ${t('bonds.riskMark', { level: riskTypeByLevel[bond.riskLevel] })}`;
+
+const bondUrl = (ticker: string) => `https://www.tbank.ru/invest/bonds/${ticker}/`;
+
+const bondLabel = (bond: BondDto) =>
+  t('bonds.openBond', {
+    name: bond.name,
+    yield: formatYield(bond.yield),
+    meta: bondMeta(bond),
+  });
+
+const openBond = (event: MouseEvent, ticker: string) => {
+  if (!Telegram.WebApp.initData) {
+    return;
+  }
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) {
+    return;
+  }
+  event.preventDefault();
+  Telegram.WebApp.openLink(bondUrl(ticker));
+};
 </script>
+
+<style scoped>
+.state {
+  padding: 8px 16px 16px;
+}
+
+.state p {
+  margin: 0 0 8px;
+  color: var(--van-text-color-2);
+}
+
+.yield {
+  color: var(--yield-color, #6ab3f3);
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+
+.van-pagination {
+  margin: 16px;
+}
+
+:deep(.van-pagination__item) {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+:deep(.van-cell) {
+  min-height: 44px;
+}
+
+:deep(.van-cell__title) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+:deep(.van-cell__label) {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+:deep(.van-cell__value) {
+  flex: none;
+  margin-left: 12px;
+}
+
+.quiet-empty :deep(.van-empty__image) {
+  display: none;
+}
+
+.quiet-empty :deep(.van-empty__description) {
+  margin-top: 12px;
+  padding: 0 8px;
+  color: var(--van-text-color);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.quiet-empty .van-button {
+  min-height: 44px;
+}
+</style>

@@ -1,50 +1,36 @@
 <template>
-  <AConfigProvider :theme="themeConfig">
-    <component
-      :is="isMobile ? MobileLayout : DesktopLayout"
-      v-model:selected-keys="selectedKeys"
-      :items="items"
-    />
-  </AConfigProvider>
+  <div class="shell">
+    <van-nav-bar :title="title" :left-arrow="!isHome" @click-left="router.push('/')" />
+    <main class="shell-main">
+      <router-view />
+    </main>
+    <footer class="shell-footer">
+      <nav :aria-label="t('common.legal')">
+        <router-link to="/privacy-policy">{{ t('privacy.title') }}</router-link>
+        <router-link to="/terms-of-use">{{ t('terms.title') }}</router-link>
+      </nav>
+      <p>Finper ©{{ year }}</p>
+    </footer>
+  </div>
 </template>
 
 <script setup lang="ts">
-/* eslint-disable @typescript-eslint/no-floating-promises */
-import { DesktopOutlined, FileOutlined } from '@ant-design/icons-vue';
-import { useIsMobile } from '@shared/composabes';
-import { ItemType } from 'ant-design-vue';
-import { h, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-
-import DesktopLayout from './layouts/DesktopLayout.vue';
-import MobileLayout from './layouts/MobileLayout.vue';
-import { themeConfig } from './theme';
+import { useRoute, useRouter } from 'vue-router';
 
 const { t } = useI18n();
+const route = useRoute();
 const router = useRouter();
-const isMobile = useIsMobile();
 
-const selectedKeys = ref(['home']);
+const year = new Date().getFullYear();
+const isHome = computed(() => route.path === '/');
+const title = computed(() => {
+  const key = route.meta.titleKey;
+  return typeof key === 'string' ? t(key) : t('bonds.title');
+});
 
-const items: ItemType[] = [
-  {
-    label: t('common.home'),
-    key: 'home',
-    title: '',
-    icon: () => h(DesktopOutlined),
-    onClick: () => {
-      router.push('/');
-    },
-  },
-  {
-    label: t('presets.title'),
-    key: 'presets',
-    title: '',
-    icon: () => h(FileOutlined),
-    onClick: () => {
-      router.push('/presets');
-    },
-  },
-];
+watch(title, (value) => {
+  document.title = value;
+}, { immediate: true });
 </script>

@@ -1,30 +1,26 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
-type Route = RouteRecordRaw & {
-  path: string;
-  breadcrumbName: string;
-};
+declare module 'vue-router' {
+  interface RouteMeta {
+    titleKey: string;
+  }
+}
 
-export const routes: Array<Route> = [
+export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    breadcrumbName: 'Home',
     component: () => import('@pages/MainPage.vue'),
-  },
-  {
-    path: '/presets',
-    breadcrumbName: 'Presets',
-    component: () => import('@pages/PresetPage.vue'),
+    meta: { titleKey: 'bonds.title' },
   },
   {
     path: '/privacy-policy',
-    breadcrumbName: 'Privacy Policy',
     component: () => import('@pages/PrivacyPolicyPage.vue'),
+    meta: { titleKey: 'privacy.title' },
   },
   {
     path: '/terms-of-use',
-    breadcrumbName: 'Terms of Use',
     component: () => import('@pages/TermsOfUsePage.vue'),
+    meta: { titleKey: 'terms.title' },
   },
 ];
 
