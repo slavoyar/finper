@@ -1,16 +1,12 @@
-services:
-  api:
-    build:
-      dockerfile: Dockerfile.api
-    ports:
-      - '3000:3000'
-    env_file:
-      - apps/api/.env
+# Local Postgres only. Production does not use this file.
+# Coolify sets DATABASE_URL to the shared server database finper.
 
-  ui:
-    build:
-      dockerfile: Dockerfile.ui
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: finper
     ports:
-      - '5173:80'
-    depends_on:
-      - api
+      - "5432:5432"

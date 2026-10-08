@@ -1,62 +1,29 @@
+# App only. Postgres is the shared server (database finper), same host and user
+# as Chinese Laoshi. Do not add a postgres service here.
+# Production images are deployed by Coolify from GHCR (.github/workflows/deploy.yml).
+# Set DATABASE_URL in Coolify: postgres://USER@HOST:5432/finper
+
 services:
-  mongodb:
-    image: mongo:8.0
-    container_name: finper-mongodb
-    restart: always
-    command: ['mongod', '--replSet', 'rs0', '--bind_ip_all', '--keyFile', '/etc/mongo-keyfile']
-    env_file:
-      - .env
-    volumes:
-      - mongo-data:/data/db
-      - ./02-init-replica.js:/docker-entrypoint-initdb.d/02-init-replica.js
-      - ./mongo-keyfile:/etc/mongo-keyfile:ro
-    networks:
-      - nginx-proxy
-    healthcheck:
-      test: >
-        mongosh --username $MONGO_INITDB_ROOT_USERNAME --password $MONGO_INITDB_ROOT_PASSWORD \
-          --eval "try { rs.status().ok } catch (e) { \
-                rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'finper-mongodb:27017' }] }).ok \
-              }"
-
-
-      interval: 10s
-      start_period: 5s
-      retries: 5
-
   api:
-    image: ghcr.io/slavoyar/finper-api:latest
-    container_name: finper-api
-    expose:
-      - '3000'
-    env_file:
-      - .env
-    environment:
-      - NODE_ENV=production
-    depends_on:
-      - mongodb
-    networks:
-      - nginx-proxy
-    cpus: 0.3
-    mem_limit: 1024m
+    image: ${REGISTRY_IMAGE:-ghcr.io/slavoyar/finper-api:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.api
     restart: always
+    ports:
+      - "${HOST_PORT:-3000}:3000"
+    environment:
+      PORT: ${PORT:-3000}
+      NODE_ENV: ${NODE_ENV:-production}
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL to postgres://USER@HOST:5432/finper}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TINKOFF_TOKEN: ${TINKOFF_TOKEN:-}
 
   ui:
-    image: ghcr.io/slavoyar/finper-ui:latest
-    container_name: finper-ui
-    expose:
-      - '80'
-    environment:
-      - VIRTUAL_HOST=$UI_HOST
-      - LETSENCRYPT_HOST=$UI_HOST
-      - LETSENCRYPT_EMAIL=slavoyarmc@gmail.com
-    networks:
-      - nginx-proxy
+    image: ${UI_IMAGE:-ghcr.io/slavoyar/finper-ui:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
     restart: always
-
-volumes:
-  mongo-data:
-
-networks:
-  nginx-proxy:
-    external: true
+    ports:
+      - "${UI_PORT:-8080}:80"

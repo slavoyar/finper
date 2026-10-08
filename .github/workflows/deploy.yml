@@ -1,104 +1,72 @@
-name: CI/CD – Build & Deploy All
+# Production: push to main builds GHCR images, then Coolify deploys them.
+# DATABASE_URL (database finper on the shared Postgres) is set in Coolify, not here.
+
+name: Deploy to Coolify
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'apps/**'
-      - 'packages/**'
-      - 'docker-compose.yml'
-      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
-  build-and-push:
-    name: Build & Push Images
+  check:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        service:
-          - name: api
-            dockerfile: Dockerfile.api
-            image: finper-api
-          - name: ui
-            dockerfile: Dockerfile.ui
-            image: finper-ui
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" \ | docker login ${{ env.REGISTRY }} -u "${{ github.repository_owner }}" --password-stdin
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
 
-      - name: Build & Push ${{ matrix.service.name }}
-        run: |
-          docker build \
-            -f ${{ matrix.service.dockerfile }} \
-            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service.image }}:latest .
-          docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service.image }}:latest
+      - run: npm ci
+
+      - run: npm run prisma:generate --workspace=@finper/api
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/finper
+
+      - run: npm run build --workspace=@finper/api
 
   deploy:
-    name: Deploy
+    needs: check
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    needs: build-and-push
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Create .env file
-        run: |
-          cat << 'EOF' > .env
-          DATABASE_URL=mongodb://${{ secrets.MONGO_APP_USER }}:${{ secrets.MONGO_APP_PASSWORD }}@${{ secrets.MONGO_HOST }}:27017/${{ secrets.MONGO_DB }}?authSource=admin&replicaSet=rs0
-          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }}
-          UI_HOST=${{ secrets.UI_HOST }}
-          MONGO_INITDB_DATABASE=${{ secrets.MONGO_DB }}
-          MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_APP_USER }}
-          MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_APP_PASSWORD }}
-          EOF
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Crete mongo init script
-        run: |
-          cat << 'EOF' > 02-init-replica.js
-          try {
-            rs.initiate({
-              _id: process.env.REPLICA_SET || "rs0",
-              members: [{ _id: 0, host: "${{ secrets.MONGO_HOST }}:27017" }]
-            });
-            print("Replica set initiated");
-          } catch (e) {
-            print("rs.initiate() error:", e.message);
-          }
-          EOF
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.api
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/finper-api:latest
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/finper-api:sha-${{ github.sha }}
 
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.ui
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/finper-ui:latest
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/finper-ui:sha-${{ github.sha }}
 
-      - name: Copy files
-        run: |
-          scp -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
-          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{secrets.DEPLOY_DIR}}
-
-      - name: Deploy to server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            set -e
-            cd ${{secrets.DEPLOY_DIR}}
-
-            docker compose pull
-            docker compose up -d --build
-
-            docker system prune -f
-          EOF
+      - name: Trigger Coolify deploy
+        run: >
+          curl --fail --silent --show-error
+          --request POST "${{ secrets.COOLIFY_WEBHOOK }}"
+          --header "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}"
