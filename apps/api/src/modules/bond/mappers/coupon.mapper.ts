@@ -1,18 +1,18 @@
 import {
+  type CouponJson,
   moneyValueToSchemaMoneyValue,
   quotationToNumber,
   quotationToSchemaQuotation,
   timestampToDate,
 } from '@common/utils';
 import { tinkoff } from '@external/tinkoff/protos/instruments';
-import { Coupon } from '@prisma/client';
 
-export const couponMapper = (coupon: tinkoff._public.invest.api.contract.v1.Coupon): Coupon => {
+export const couponMapper = (coupon: tinkoff._public.invest.api.contract.v1.Coupon): CouponJson => {
   return {
     figi: coupon.figi ?? null,
-    couponDate: timestampToDate(coupon.couponDate),
-    couponEndDate: timestampToDate(coupon.couponEndDate),
-    couponStartDate: timestampToDate(coupon.couponStartDate),
+    couponDate: timestampToDate(coupon.couponDate)?.toISOString() ?? null,
+    couponEndDate: timestampToDate(coupon.couponEndDate)?.toISOString() ?? null,
+    couponStartDate: timestampToDate(coupon.couponStartDate)?.toISOString() ?? null,
     couponPeriod: coupon.couponPeriod ?? null,
     couponNumber: quotationToNumber(
       quotationToSchemaQuotation(
@@ -20,7 +20,7 @@ export const couponMapper = (coupon: tinkoff._public.invest.api.contract.v1.Coup
       )
     ),
     couponType: coupon.couponType ?? null,
-    fixDate: timestampToDate(coupon.fixDate),
+    fixDate: timestampToDate(coupon.fixDate)?.toISOString() ?? null,
     payOneBond: moneyValueToSchemaMoneyValue(coupon.payOneBond),
   };
 };

@@ -1,4 +1,4 @@
-import { quotationToNumber } from '@common/utils';
+import { asLastPrice, asQuotation, quotationToNumber } from '@common/utils';
 import { BondDto } from '@finper/shared';
 import { Bond } from '@prisma/client';
 
@@ -7,9 +7,9 @@ export const bondDtoMapper = (bond: Bond): BondDto | null => {
     return null;
   }
 
-  const nominal = quotationToNumber(bond.nominal);
-  let lastPrice = quotationToNumber(bond.lastPrice?.price);
-  const accumulatedCoupon = quotationToNumber(bond.aciValue);
+  const nominal = quotationToNumber(asQuotation(bond.nominal));
+  let lastPrice = quotationToNumber(asLastPrice(bond.lastPrice)?.price);
+  const accumulatedCoupon = quotationToNumber(asQuotation(bond.aciValue));
 
   if (!nominal || !lastPrice || accumulatedCoupon === null) {
     return null;

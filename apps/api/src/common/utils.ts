@@ -1,11 +1,42 @@
 import { google, tinkoff } from '@external/tinkoff/protos/common';
-import { MoneyValue, Quotation } from '@prisma/client';
 
-export async function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+export type QuotationJson = { units: number | null; nano: number | null };
+export type MoneyJson = { currency: string | null; units: number | null; nano: number | null };
+
+export type CouponJson = {
+  figi: string | null;
+  couponDate: string | null;
+  couponNumber: number | null;
+  fixDate: string | null;
+  payOneBond: MoneyJson | null;
+  couponType: number | null;
+  couponStartDate: string | null;
+  couponEndDate: string | null;
+  couponPeriod: number | null;
+};
+
+export type LastPriceJson = {
+  figi: string | null;
+  price: QuotationJson | null;
+  time: string | null;
+  instrumentUid: string | null;
+  lastPriceType: number | null;
+};
+
+export function asQuotation(value: unknown): QuotationJson | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const row = value as { units?: number | null; nano?: number | null };
+  return { units: row.units ?? null, nano: row.nano ?? null };
 }
 
-export const toNull = <T>(value: T | undefined): T | null => (value ? value : null);
+export function asLastPrice(value: unknown): LastPriceJson | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  return value as LastPriceJson;
+}
+
+export function asCoupons(value: unknown): CouponJson[] {
+  return Array.isArray(value) ? (value as CouponJson[]) : [];
+}
 
 export function timestampToDate(timestamp?: google.protobuf.Timestamp | null): Date | null {
   if (!timestamp || !timestamp.seconds) return null;
@@ -13,19 +44,20 @@ export function timestampToDate(timestamp?: google.protobuf.Timestamp | null): D
   return isNaN(date.getTime()) ? null : date;
 }
 
-export const dateToTimestamp = (date?: Date | null): google.protobuf.Timestamp | undefined => {
+export const dateToTimestamp = (date?: Date | string | null): google.protobuf.Timestamp | undefined => {
   if (!date) {
     return undefined;
   }
+  const value = date instanceof Date ? date : new Date(date);
   return {
-    seconds: Math.floor(date.getTime() / 1000),
-    nanos: date.getMilliseconds() * 1e6,
+    seconds: Math.floor(value.getTime() / 1000),
+    nanos: value.getMilliseconds() * 1e6,
   };
 };
 
 export const quotationToSchemaQuotation = (
   quotation?: tinkoff._public.invest.api.contract.v1.Quotation
-): Quotation | null => {
+): QuotationJson | null => {
   if (!quotation) {
     return null;
   }
@@ -38,7 +70,7 @@ export const quotationToSchemaQuotation = (
 
 export const moneyValueToSchemaMoneyValue = (
   moneyValue?: tinkoff._public.invest.api.contract.v1.MoneyValue
-): MoneyValue | null => {
+): MoneyJson | null => {
   if (!moneyValue) {
     return null;
   }
@@ -57,13 +89,11 @@ export function sanitizeUnits(units?: { low: number; high: number; unsigned: boo
   return unsigned ? result : result | 0;
 }
 
-export function quotationToNumber(quotation?: Quotation | null): number | null {
+export function quotationToNumber(
+  quotation?: { units?: number | null; nano?: number | null } | null
+): number | null {
   if (!quotation) {
     return null;
   }
   return (quotation.units || 0) + (quotation.nano || 0) / 1e9;
-}
-
-export function escapeMarkdownV2(text: string): string {
-  return text.replace(/[_*~>#+=|{}.!-]/g, (match) => `\\${match}`);
 }

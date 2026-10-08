@@ -1,4 +1,11 @@
-import { dateToTimestamp, quotationToNumber } from '@common/utils';
+import {
+  asCoupons,
+  asLastPrice,
+  asQuotation,
+  type CouponJson,
+  dateToTimestamp,
+  quotationToNumber,
+} from '@common/utils';
 import { tinkoff as TinkoffInstruments } from '@external/tinkoff/protos/instruments';
 import { tinkoff as TinkoffMarketData } from '@external/tinkoff/protos/marketdata';
 import { Metadata } from '@grpc/grpc-js';
@@ -6,13 +13,14 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { Bond, Coupon } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { firstValueFrom } from 'rxjs';
 
 import { BondService } from './bond.service';
 import { bondMapper } from './mappers/bond.mapper';
 import { couponMapper } from './mappers/coupon.mapper';
 import { lastPriceMapper } from './mappers/last-price.mapper';
+import { yieldToMaturity } from './yield-to-maturity';
 
 const REQUEST_LIMIT = 50; // max requests per minute
 
@@ -42,6 +50,7 @@ export class BondCronService {
 
   @Cron(CronExpression.EVERY_6_HOURS)
   public async updateBonds(offset = 0) {
+    if (!this.configService.get('TINKOFF_TOKEN')) return;
     const freshBonds = await this.getBonds();
     const bonds = await this.bondService.getBonds(false);
 
@@ -65,6 +74,7 @@ export class BondCronService {
 
   @Cron(CronExpression.EVERY_10_MINUTES)
   public async updateBondPrices() {
+    if (!this.configService.get('TINKOFF_TOKEN')) return;
     this.logger.log('Updating bond prices...');
     const bonds = await this.bondService.getBonds(false);
 
@@ -84,7 +94,7 @@ export class BondCronService {
     this.logger.log('Bond prices updated');
   }
 
-  private async getBonds(): Promise<Omit<Bond, 'id'>[]> {
+  private async getBonds(): Promise<Prisma.BondCreateInput[]> {
     this.logger.log('Fetching bonds...');
     const response = await firstValueFrom(
       this.instrumentsService.bonds(
@@ -103,13 +113,15 @@ export class BondCronService {
     return response.instruments?.map((bond) => bondMapper(bond)) ?? [];
   }
 
-  private async getCoupons(bonds: Omit<Bond, 'id'>[]): Promise<{ uid: string; coupons: Coupon[] }[]> {
-    const filteredBonds = bonds.filter((bond) => !!bond.figi && !!bond.maturityDate);
+  private async getCoupons(
+    bonds: Prisma.BondCreateInput[]
+  ): Promise<{ uid: string; coupons: CouponJson[] }[]> {
+    const filteredBonds = bonds.filter((bond) => !!bond.maturityDate);
 
     const timePerRequest = 60 / REQUEST_LIMIT;
     let startTime: Date;
 
-    const result: { uid: string; coupons: Coupon[] }[] = [];
+    const result: { uid: string; coupons: CouponJson[] }[] = [];
     let bondIndex = 1;
     for (const bond of filteredBonds) {
       startTime = new Date();
@@ -117,7 +129,7 @@ export class BondCronService {
       const response = await firstValueFrom(
         this.instrumentsService.getBondCoupons(
           {
-            figi: bond.figi!,
+            instrumentId: bond.uid ?? '',
             from: dateToTimestamp(new Date()),
             to: dateToTimestamp(bond.maturityDate),
           },
@@ -126,7 +138,7 @@ export class BondCronService {
       );
       const coupons = response.events?.map((coupon) => couponMapper(coupon)) ?? [];
 
-      result.push({ uid: bond.uid, coupons });
+      result.push({ uid: bond.uid ?? '', coupons });
 
       const timeout = timePerRequest - (new Date().getTime() - startTime.getTime()) / 1000;
 
@@ -146,27 +158,35 @@ export class BondCronService {
         this.logger.log(`Skipping YTM calculation for bond "${bond.ticker}" due to missing maturity date`);
         continue;
       }
-      const nominal = quotationToNumber(bond.nominal);
-      let lastPrice = quotationToNumber(bond.lastPrice?.price);
-      const accumulatedCoupon = quotationToNumber(bond.aciValue);
+      const nominal = quotationToNumber(asQuotation(bond.nominal));
+      const lastPrice = quotationToNumber(asLastPrice(bond.lastPrice)?.price);
+      const accumulatedCoupon = quotationToNumber(asQuotation(bond.aciValue));
 
-      if (!nominal || !lastPrice || accumulatedCoupon === null) {
+      if (!nominal || !lastPrice) {
         this.logger.log(
-          `Skipping YTM calculation for bond "${bond.ticker}" due to missing data: nominal=${nominal}, lastPrice=${lastPrice}, accumulatedCoupon=${accumulatedCoupon}`
+          `Skipping YTM calculation for bond "${bond.ticker}" due to missing data: nominal=${nominal}, lastPrice=${lastPrice}`
         );
         continue;
       }
-      lastPrice = (lastPrice / 100) * nominal;
 
-      const couponProfit =
-        bond.coupons.reduce((acc, coupon) => {
-          return acc + quotationToNumber(coupon.payOneBond)!;
-        }, 0) - accumulatedCoupon;
-
-      const priceProfit = nominal - lastPrice;
-
-      const daysLeft = (bond.maturityDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24);
-      const ytm = (couponProfit + priceProfit) / lastPrice / (daysLeft / 365.25);
+      const clean = (lastPrice / 100) * nominal;
+      const dirty = clean + (accumulatedCoupon ?? 0);
+      const coupons = asCoupons(bond.coupons).flatMap((coupon) => {
+        const amount = quotationToNumber(coupon.payOneBond);
+        if (!amount || !coupon.couponDate) return [];
+        const date = new Date(coupon.couponDate);
+        return Number.isNaN(date.getTime()) ? [] : [{ amount, date }];
+      });
+      const ytm = yieldToMaturity({
+        dirtyPrice: dirty,
+        redemption: nominal,
+        maturity: bond.maturityDate,
+        coupons,
+      });
+      if (ytm == null) {
+        this.logger.log(`Skipping YTM calculation for bond "${bond.ticker}": no positive-time cash flows`);
+        continue;
+      }
 
       result.push({ uid: bond.uid, ytm });
     }
@@ -174,13 +194,13 @@ export class BondCronService {
     await this.bondService.updateYieldToMaturity(result);
   }
 
-  private async removeOldBonds(bonds: Omit<Bond, 'id'>[]) {
+  private async removeOldBonds(bonds: { uid: string }[]) {
     this.logger.log(`Removing ${bonds.length} old bonds...`);
-    const ids = bonds.map((bond) => bond.uid);
+    const ids = bonds.flatMap((bond) => (bond.uid ? [bond.uid] : []));
     await this.bondService.removeBonds(ids);
   }
 
-  private async fillCoupons(bonds: Omit<Bond, 'id'>[], offset = 0) {
+  private async fillCoupons(bonds: Prisma.BondCreateInput[], offset = 0) {
     this.logger.log(`Filling ${bonds.length} bond coupons...`);
 
     for (let i = offset; i < bonds.length; i += REQUEST_LIMIT) {

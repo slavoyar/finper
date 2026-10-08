@@ -4,7 +4,7 @@ import { Reflector } from '@nestjs/core';
 import * as crypto from 'crypto';
 import { FastifyRequest } from 'fastify';
 
-import { User } from './interfaces';
+import { User } from './interfaces/user';
 
 @Injectable()
 export class TelegramAuthGuard implements CanActivate {

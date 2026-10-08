@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "nest build",
-    "generate:proto": "tsproto --path ./src/external/tinkoff/protos --include node_modules/google-proto-files && sed -i 's/export namespace public/export namespace _public/g' ./src/external/tinkoff/protos/*.ts",
+    "generate:proto": "node ./scripts/generate-proto.mjs",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "dev": "NODE_ENV=development nest start --watch",
