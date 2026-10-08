@@ -1,0 +1,161 @@
+html,
+body,
+#app {
+  margin: 0;
+  min-height: 100%;
+}
+
+html {
+  scrollbar-color: var(--van-primary-color, #3d6ea3) var(--van-background, #17212b);
+  caret-color: var(--link-color, #6ab3f3);
+}
+
+body {
+  background: var(--app-canvas, #111921);
+  color: var(--van-text-color, #f5f5f5);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--link-color, #6ab3f3) 45%, transparent);
+  color: var(--van-text-color);
+}
+
+:focus-visible {
+  outline: 2px solid var(--link-color, #6ab3f3);
+  outline-offset: 2px;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 28rem;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--van-background);
+  color: var(--van-text-color);
+}
+
+@media (min-width: 520px) {
+  .shell {
+    min-height: 100vh;
+    border-inline: 1px solid var(--van-border-color);
+  }
+}
+
+.shell-main {
+  flex: 1;
+}
+
+.shell-footer {
+  margin-top: auto;
+  padding: 4px 8px calc(8px + env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.shell-footer nav {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.shell-footer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 12px;
+  color: var(--link-color, #6ab3f3);
+  text-underline-offset: 3px;
+}
+
+.shell-footer p {
+  margin: 0 0 8px;
+  color: var(--van-text-color-2);
+  font-size: 13px;
+}
+
+.van-nav-bar__left,
+.van-nav-bar__right {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.van-nav-bar .van-icon {
+  font-size: 22px;
+}
+
+.filter-sheet.van-popup--bottom {
+  width: min(100%, 28rem);
+  max-width: 28rem;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+}
+
+.legal {
+  padding: 4px 16px 24px;
+}
+
+.legal h2 {
+  margin: 1.35rem 0 0.4rem;
+  color: var(--van-text-color);
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.legal p,
+.legal li {
+  color: var(--van-text-color-2);
+  line-height: 1.45;
+}
+
+.legal a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--link-color, #6ab3f3);
+  text-underline-offset: 3px;
+}
+
+.legal dt {
+  margin-top: 12px;
+  color: var(--van-text-color-3);
+  font-size: 12px;
+}
+
+.legal dd {
+  margin: 2px 0 0;
+}
+
+.gate {
+  justify-content: center;
+  padding: 32px 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.gate h1 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.gate p {
+  margin: 0 0 12px;
+  color: var(--van-text-color-2);
+}
+
+.gate .bot {
+  color: var(--link-color, #6ab3f3);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.gate .van-button {
+  min-height: 44px;
+  margin-top: 8px;
+}

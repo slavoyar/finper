@@ -1,5 +1,4 @@
 import tseslint from 'typescript-eslint';
-import eslintPluginTailwindCSS from 'eslint-plugin-tailwindcss';
 import eslintPluginVue from 'eslint-plugin-vue';
 import path from 'path';
 import globals from 'globals';
@@ -16,7 +15,6 @@ export default baseConfig([
   {
     plugins: {
       vue: eslintPluginVue,
-      tailwindcss: eslintPluginTailwindCSS,
     },
   },
   ...eslintPluginVue.configs['flat/strongly-recommended'],
@@ -31,6 +29,7 @@ export default baseConfig([
       },
       globals: {
         ...globals.browser,
+        Telegram: 'readonly',
       },
     },
   },
