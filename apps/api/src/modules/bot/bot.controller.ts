@@ -1,18 +1,22 @@
 import { Public } from '@common/decorators/public';
-import { Update } from '@external/telegram/interfaces';
+import { TelegramService } from '@external/telegram/telegram.service';
 import { Body, Controller, Post } from '@nestjs/common';
 
-import { BotService } from './bot.service';
+const MINI_APP_HINT = 'Откройте мини-приложение, чтобы посмотреть облигации.';
 
 @Controller('bot')
 export class BotController {
-  constructor(private botService: BotService) {}
+  constructor(private telegram: TelegramService) {}
 
   @Public()
   @Post()
-  public async handleMessage(@Body() body: Update) {
+  public async handleMessage(@Body() body: { message?: { chat?: { id?: number } } }) {
+    const chatId = body.message?.chat?.id;
+    if (!chatId) {
+      return;
+    }
     try {
-      await this.botService.handleUpdate(body);
+      await this.telegram.sendMessage(chatId, MINI_APP_HINT);
     } catch (error) {
       console.error(error);
     }

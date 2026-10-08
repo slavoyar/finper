@@ -5,9 +5,12 @@ import {
   timestampToDate,
 } from '@common/utils';
 import { tinkoff } from '@external/tinkoff/protos/instruments';
-import { Bond } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
-export const bondMapper = (bond: tinkoff._public.invest.api.contract.v1.Bond): Omit<Bond, 'id'> => {
+const json = (value: Prisma.InputJsonValue | null): Prisma.InputJsonValue | typeof Prisma.JsonNull =>
+  value ?? Prisma.JsonNull;
+
+export const bondMapper = (bond: tinkoff._public.invest.api.contract.v1.Bond): Prisma.BondCreateInput => {
   return {
     uid: bond.uid!,
     ticker: bond.ticker ?? null,
@@ -54,21 +57,21 @@ export const bondMapper = (bond: tinkoff._public.invest.api.contract.v1.Bond): O
     riskLevel: bond.riskLevel ?? null,
     bondType: bond.bondType ?? null,
     callDate: timestampToDate(bond.callDate),
-    klong: quotationToSchemaQuotation(bond.klong),
-    kshort: quotationToSchemaQuotation(bond.kshort),
-    dlong: quotationToSchemaQuotation(bond.dlong),
-    dshort: quotationToSchemaQuotation(bond.dshort),
-    aciValue: moneyValueToSchemaMoneyValue(bond.aciValue),
-    dlongMin: quotationToSchemaQuotation(bond.dlongMin),
-    dshortMin: quotationToSchemaQuotation(bond.dshortMin),
-    dlongClient: quotationToSchemaQuotation(bond.dlongClient),
-    dshortClient: quotationToSchemaQuotation(bond.dshortClient),
-    nominal: moneyValueToSchemaMoneyValue(bond.nominal),
-    initialNominal: moneyValueToSchemaMoneyValue(bond.initialNominal),
-    minPriceIncrement: quotationToSchemaQuotation(bond.minPriceIncrement),
-    placementPrice: moneyValueToSchemaMoneyValue(bond.placementPrice),
-    brand: null,
-    lastPrice: null,
+    klong: json(quotationToSchemaQuotation(bond.klong)),
+    kshort: json(quotationToSchemaQuotation(bond.kshort)),
+    dlong: json(quotationToSchemaQuotation(bond.dlong)),
+    dshort: json(quotationToSchemaQuotation(bond.dshort)),
+    aciValue: json(moneyValueToSchemaMoneyValue(bond.aciValue)),
+    dlongMin: json(quotationToSchemaQuotation(bond.dlongMin)),
+    dshortMin: json(quotationToSchemaQuotation(bond.dshortMin)),
+    dlongClient: json(quotationToSchemaQuotation(bond.dlongClient)),
+    dshortClient: json(quotationToSchemaQuotation(bond.dshortClient)),
+    nominal: json(moneyValueToSchemaMoneyValue(bond.nominal)),
+    initialNominal: json(moneyValueToSchemaMoneyValue(bond.initialNominal)),
+    minPriceIncrement: json(quotationToSchemaQuotation(bond.minPriceIncrement)),
+    placementPrice: json(moneyValueToSchemaMoneyValue(bond.placementPrice)),
+    brand: Prisma.JsonNull,
+    lastPrice: Prisma.JsonNull,
     coupons: [],
     yield: null,
   };

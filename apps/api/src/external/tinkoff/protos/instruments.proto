@@ -11,111 +11,134 @@ option php_namespace = "Tinkoff\\Invest\\V1";
 
 import "google/protobuf/timestamp.proto";
 import "common.proto";
+import "google/api/field_behavior.proto";
 
 service InstrumentsService {/*Методы сервиса предназначены для получения:<br/>1. Информации об инструментах.<br/>2.
                             Расписания торговых сессий.<br/>3. Календаря выплат купонов по облигациям.<br/>4.
                             Размера гарантийного обеспечения по фьючерсам.<br/>5. Дивидендов по ценной бумаге.*/
 
-  //Получить расписания торгов торговых площадок
+  //TradingSchedules — расписания торговых площадок
   rpc TradingSchedules (TradingSchedulesRequest) returns (TradingSchedulesResponse);
 
-  //Получить облигации по ее идентификатору
+  //BondBy — получить облигацию по ее идентификатору
   rpc BondBy (InstrumentRequest) returns (BondResponse);
 
-  //Получить список облигаций
+  //Bonds — список облигаций
   rpc Bonds (InstrumentsRequest) returns (BondsResponse);
 
-  //Получить график выплат купонов по облигации
+  //GetBondCoupons — график выплат купонов по облигации
   rpc GetBondCoupons (GetBondCouponsRequest) returns (GetBondCouponsResponse);
 
-  //Получить события по облигации
+  //GetBondEvents — события по облигации
   rpc GetBondEvents (GetBondEventsRequest) returns (GetBondEventsResponse);
 
-  //Получить валюту по ее идентификатору
+  //CurrencyBy — получить валюту по ее идентификатору
   rpc CurrencyBy (InstrumentRequest) returns (CurrencyResponse);
 
-  //Получить список валют
+  //Currencies — список валют
   rpc Currencies (InstrumentsRequest) returns (CurrenciesResponse);
 
-  //Получить инвестиционный фонд по его идентификатору
+  //EtfBy — получить инвестиционный фонд по его идентификатору
   rpc EtfBy (InstrumentRequest) returns (EtfResponse);
 
-  //Получить список инвестиционных фондов
+  //Etfs — список инвестиционных фондов
   rpc Etfs (InstrumentsRequest) returns (EtfsResponse);
 
-  //Получить фьючерс по его идентификатору
+  //FutureBy — получить фьючерс по его идентификатору
   rpc FutureBy (InstrumentRequest) returns (FutureResponse);
 
-  //Получить список фьючерсов
+  //Futures — список фьючерсов
   rpc Futures (InstrumentsRequest) returns (FuturesResponse);
 
-  //Получить опцион по его идентификатору
+  //OptionBy — получить опцион по его идентификатору
   rpc OptionBy (InstrumentRequest) returns (OptionResponse);
 
-  //Deprecated Получить список опционов
+  //Deprecated Options — список опционов
   rpc Options (InstrumentsRequest) returns (OptionsResponse) {
     option deprecated = true;
   };
 
-  //Получить список опционов
+  //OptionsBy — список опционов
   rpc OptionsBy (FilterOptionsRequest) returns (OptionsResponse);
 
-  //Получить акцию по ее идентификатору
+  //ShareBy — получить акцию по ее идентификатору
   rpc ShareBy (InstrumentRequest) returns (ShareResponse);
 
-  //Получить список акций
+  //Shares — список акций
   rpc Shares (InstrumentsRequest) returns (SharesResponse);
 
-  //Получить индикативные инструменты — индексы, товары и другие
+  //Indicatives — индикативные инструменты — индексы, товары и другие
   rpc Indicatives(IndicativesRequest) returns (IndicativesResponse);
 
-  //Получить накопленный купонный доход по облигации
+  //GetAccruedInterests — накопленный купонный доход по облигации
   rpc GetAccruedInterests (GetAccruedInterestsRequest) returns (GetAccruedInterestsResponse);
 
-  //Получить размера гарантийного обеспечения по фьючерсам
+  //GetFuturesMargin — размера гарантийного обеспечения по фьючерсам
   rpc GetFuturesMargin (GetFuturesMarginRequest) returns (GetFuturesMarginResponse);
 
-  //Получить основную информацию об инструменте
+  //GetInstrumentBy — основная информация об инструменте
   rpc GetInstrumentBy (InstrumentRequest) returns (InstrumentResponse);
 
-  //Получить события выплаты дивидендов по инструменту
+  //GetDividends — события выплаты дивидендов по инструменту
   rpc GetDividends (GetDividendsRequest) returns (GetDividendsResponse);
 
-  //Получить актив по его идентификатору
+  //GetAssetBy — получить актив по его идентификатору
   rpc GetAssetBy (AssetRequest) returns (AssetResponse);
 
-  //Получить список активов. Метод работает для всех инструментов, кроме срочных — фьючерсов и опционов
+  //GetAssets — список активов
+  //Метод работает для всех инструментов, кроме срочных — фьючерсов и опционов
   rpc GetAssets (AssetsRequest) returns (AssetsResponse);
 
-  //Получить список избранных инструментов
+  //GetFavorites — получить список избранных инструментов
   rpc GetFavorites (GetFavoritesRequest) returns (GetFavoritesResponse);
 
-  //Отредактировать список избранных инструментов
+  //EditFavorites — отредактировать список избранных инструментов
   rpc EditFavorites (EditFavoritesRequest) returns (EditFavoritesResponse);
 
-  //Получить список стран
+  //CreateFavoriteGroup — создать новую группу избранных инструментов
+  rpc CreateFavoriteGroup (CreateFavoriteGroupRequest) returns (CreateFavoriteGroupResponse);
+
+  //DeleteFavoriteGroup — удалить группу избранных инструментов
+  rpc DeleteFavoriteGroup (DeleteFavoriteGroupRequest) returns (DeleteFavoriteGroupResponse);
+
+  //GetFavoriteGroups — список групп избранных инструментов
+  rpc GetFavoriteGroups (GetFavoriteGroupsRequest) returns (GetFavoriteGroupsResponse);
+
+  //GetCountries — список стран
   rpc GetCountries (GetCountriesRequest) returns (GetCountriesResponse);
 
-  //Найти инструмент
+  //FindInstrument — найти инструмент
   rpc FindInstrument (FindInstrumentRequest) returns (FindInstrumentResponse);
 
-  //Получить список брендов
+  //GetBrands — список брендов
   rpc GetBrands(GetBrandsRequest) returns (GetBrandsResponse);
 
-  //Получить бренд по его идентификатору
+  //GetBrandBy — получить бренд по его идентификатору
   rpc GetBrandBy(GetBrandRequest) returns (Brand);
 
-  //Получить фундаментальные показатели по активу
+  //GetAssetFundamentals — фундаментальные показатели по активу
   rpc GetAssetFundamentals(GetAssetFundamentalsRequest) returns (GetAssetFundamentalsResponse);
 
-  //Получить расписания выхода отчетностей эмитентов
+  //GetAssetReports — расписания выхода отчетностей эмитентов
   rpc GetAssetReports(GetAssetReportsRequest) returns (GetAssetReportsResponse);
 
-  //Получить мнения аналитиков по инструменту
+  //GetConsensusForecasts — мнения аналитиков по инструменту
   rpc GetConsensusForecasts(GetConsensusForecastsRequest) returns (GetConsensusForecastsResponse);
 
-  //Получить прогнозов инвестдомов по инструменту
+  //GetForecastBy — прогнозы инвестдомов по инструменту
   rpc GetForecastBy(GetForecastRequest) returns (GetForecastResponse);
+
+  //GetRiskRates — ставки риска по инструменту
+  rpc GetRiskRates(RiskRatesRequest) returns (RiskRatesResponse);
+
+  //GetInsiderDeals —  сделки инсайдеров по инструментам
+  rpc GetInsiderDeals(GetInsiderDealsRequest) returns (GetInsiderDealsResponse);
+
+  //StructuredNoteBy — получить структурную ноту по ее идентификатору
+  rpc StructuredNoteBy (InstrumentRequest) returns (StructuredNoteResponse);
+
+  //StructuredNotes — список структурных нот
+  rpc StructuredNotes(InstrumentsRequest) returns (StructuredNotesResponse);
 }
 
 //Запрос расписания торгов.
@@ -337,8 +360,8 @@ message Option {
 
   int32 lot = 201; //Количество бумаг в лоте.
   Quotation basic_asset_size = 211; //Размер основного актива.
-  Quotation klong = 221; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
-  Quotation kshort = 222; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation klong = 221 [deprecated = true]; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation kshort = 222 [deprecated = true]; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
   Quotation dlong = 223; //Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dshort = 224; //Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dlong_min = 225; //Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
@@ -364,6 +387,7 @@ message Option {
   bool weekend_flag = 407; //Флаг, отображающий доступность торговли инструментом по выходным.
   bool blocked_tca_flag = 408; //Флаг заблокированного ТКС.
   bool api_trade_available_flag = 409; //Возможность торговать инструментом через API.
+  repeated string required_tests = 410; //Тесты, которые необходимо пройти клиенту, чтобы совершать сделки по инструменту.
 }
 
 //Тип опциона по направлению сделки.
@@ -404,6 +428,16 @@ message SharesResponse {
   repeated Share instruments = 1; //Массив акций.
 }
 
+//Данные по структурной ноте.
+message StructuredNoteResponse {
+  StructuredNote instrument = 1; // Информация о структурной ноте.
+}
+
+//Данные по структурным нотам.
+message StructuredNotesResponse {
+  repeated StructuredNote instruments = 1; //Массив структурных нот.
+}
+
 //Объект передачи информации об облигации.
 message Bond {
   string figi = 1; //FIGI-идентификатор инструмента.
@@ -413,8 +447,8 @@ message Bond {
   int32 lot = 5; //Лотность инструмента. Возможно совершение операций только на количества ценной бумаги, кратные параметру `lot`. [Подробнее](./glossary#lot).
   string currency = 6; //Валюта расчетов.
 
-  Quotation klong = 7; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
-  Quotation kshort = 8; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation klong = 7 [deprecated = true]; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation kshort = 8 [deprecated = true]; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
   Quotation dlong = 9; //Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dshort = 10; //Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dlong_min = 11; // Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
@@ -455,6 +489,8 @@ message Bond {
   string position_uid = 42; //Уникальный идентификатор позиции инструмента.
   string asset_uid = 43; //Уникальный идентификатор актива.
 
+  repeated string required_tests = 44; //Тесты, которые необходимо пройти клиенту, чтобы совершать сделки по инструменту.
+
   bool for_iis_flag = 51; //Признак доступности для ИИС.
   bool for_qual_investor_flag = 52; //Флаг, отображающий доступность торговли инструментом только для квалифицированных инвесторов.
   bool weekend_flag = 53; //Флаг, отображающий доступность торговли инструментом по выходным.
@@ -482,8 +518,8 @@ message Currency {
   int32 lot = 5; //Лотность инструмента. Возможно совершение операций только на количества ценной бумаги, кратные параметру `lot`. [Подробнее](./glossary#lot).
   string currency = 6; //Валюта расчетов.
 
-  Quotation klong = 7; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
-  Quotation kshort = 8; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation klong = 7 [deprecated = true]; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation kshort = 8 [deprecated = true]; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
   Quotation dlong = 9; //Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dshort = 10; //Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dlong_min = 11; //Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
@@ -509,6 +545,8 @@ message Currency {
   RealExchange real_exchange = 28; //Реальная площадка исполнения расчетов (биржа).
   string position_uid = 29; //Уникальный идентификатор позиции инструмента.
 
+  repeated string required_tests = 30; //Тесты, которые необходимо пройти клиенту, чтобы совершать сделки по инструменту.
+
   bool for_iis_flag = 41; //Признак доступности для ИИС.
   bool for_qual_investor_flag = 52; //Флаг, отображающий доступность торговли инструментом только для квалифицированных инвесторов.
   bool weekend_flag = 53; //Флаг, отображающий доступность торговли инструментом по выходным.
@@ -531,8 +569,8 @@ message Etf {
   int32 lot = 5; //Лотность инструмента. Возможно совершение операций только на количества ценной бумаги, кратные параметру `lot`. [Подробнее](./glossary#lot).
   string currency = 6; //Валюта расчетов.
 
-  Quotation klong = 7; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
-  Quotation kshort = 8; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation klong = 7 [deprecated = true]; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation kshort = 8 [deprecated = true]; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
   Quotation dlong = 9; //Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dshort = 10; //Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dlong_min = 11; //Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
@@ -564,6 +602,8 @@ message Etf {
   string asset_uid = 34; //Уникальный идентификатор актива.
   InstrumentExchangeType instrument_exchange = 35; //Тип площадки торговли.
 
+  repeated string required_tests = 36; //Тесты, которые необходимо пройти клиенту, чтобы совершать сделки по инструменту.
+
   bool for_iis_flag = 41; //Признак доступности для ИИС.
   bool for_qual_investor_flag = 42; //Флаг, отображающий доступность торговли инструментом только для квалифицированных инвесторов.
   bool weekend_flag = 43; //ФлагФлаг, отображающий доступность торговли инструментом по выходным.
@@ -586,8 +626,8 @@ message Future {
   int32 lot = 4; //Лотность инструмента. Возможно совершение операций только на количества ценной бумаги, кратные параметру `lot`. [Подробнее](./glossary#lot).
   string currency = 5; //Валюта расчетов.
 
-  Quotation klong = 6; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
-  Quotation kshort = 7; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation klong = 6 [deprecated = true]; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation kshort = 7 [deprecated = true]; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
   Quotation dlong = 8; //Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dshort = 9; //Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dlong_min = 10; //Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
@@ -620,6 +660,8 @@ message Future {
   string position_uid = 33; //Уникальный идентификатор позиции инструмента.
   string basic_asset_position_uid = 34; //Уникальный идентификатор позиции основного инструмента.
 
+  repeated string required_tests = 35; //Тесты, которые необходимо пройти клиенту, чтобы совершать сделки по инструменту.
+
   bool for_iis_flag = 41; //Признак доступности для ИИС.
   bool for_qual_investor_flag = 42; //Флаг, отображающий доступность торговли инструментом только для квалифицированных инвесторов.
   bool weekend_flag = 43; //Флаг, отображающий доступность торговли инструментом по выходным.
@@ -645,8 +687,8 @@ message Share {
   int32 lot = 5; //Лотность инструмента. Возможно совершение операций только на количества ценной бумаги, кратные параметру `lot`. [Подробнее](./glossary#lot)
   string currency = 6; //Валюта расчетов.
 
-  Quotation klong = 7; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
-  Quotation kshort = 8; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation klong = 7 [deprecated = true]; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation kshort = 8 [deprecated = true]; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
   Quotation dlong = 9; //Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dshort = 10; //Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dlong_min = 11; //Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
@@ -679,6 +721,8 @@ message Share {
   string asset_uid = 36; //Уникальный идентификатор актива.
   InstrumentExchangeType instrument_exchange = 37; //Тип площадки торговли.
 
+  repeated string required_tests = 38; //Тесты, которые необходимо пройти клиенту, чтобы совершать сделки по инструменту.
+
   bool for_iis_flag = 46; //Признак доступности для ИИС.
   bool for_qual_investor_flag = 47; //Флаг, отображающий доступность торговли инструментом только для квалифицированных инвесторов.
   bool weekend_flag = 48; //Флаг, отображающий доступность торговли инструментом по выходным.
@@ -690,6 +734,100 @@ message Share {
 
   Quotation dlong_client = 90; //Ставка риска в лонг с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dshort_client = 91; //Ставка риска в шорт с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+}
+
+//Объект передачи информации о структурной ноте.
+message StructuredNote {
+  string uid = 1; //Уникальный идентификатор инструмента.
+  string figi = 2; //FIGI-идентификатор инструмента.
+  string ticker = 3; //Тикер инструмента.
+  string class_code = 4; //Класс-код (секция торгов).
+  string isin = 5; //ISIN-идентификатор инструмента.
+  string name = 6; //Название инструмента.
+  string asset_uid = 7; //Уникальный идентификатор актива.
+  string position_uid = 8; //Уникальный идентификатор позиции.
+  Quotation min_price_increment = 9; //Шаг цены.
+  int32 lot = 10; //Лотность инструмента.
+  MoneyValue nominal = 11; //Номинал.
+  string currency = 12; //Валюта расчетов.
+  google.protobuf.Timestamp maturity_date = 13; //Дата погашения облигации в формате UTC.
+  google.protobuf.Timestamp placement_date = 14; //Дата размещения в формате UTC.
+  string issue_kind = 15; //Форма выпуска.
+  int32 issue_size = 16; //Размер выпуска.
+  int32 issue_size_plan = 17; //Плановый размер выпуска.
+  Quotation dlong_client = 18; //Ставка риска клиента по инструменту лонг.
+  Quotation dshort_client = 19; //Ставка риска клиента по инструменту шорт.
+  bool short_enabled_flag = 20; //Признак доступности для операций в шорт.
+  string exchange = 21; //Торговая площадка (секция биржи).
+  SecurityTradingStatus trading_status = 22; //Текущий режим торгов инструмента.
+  bool api_trade_available_flag = 23; //Признак доступности торгов по бумаге через API.
+  bool buy_available_flag = 24; //Признак доступности для покупки.
+  bool sell_available_flag = 25; //Признак доступности для продажи.
+  bool limit_order_available_flag = 26; //Признак доступности выставления лимитной заявки по инструменту.
+  bool market_order_available_flag = 27; //Признак доступности выставления рыночной заявки по инструменту.
+  bool bestprice_order_available_flag = 28; //Признак доступности выставления bestprice заявки по инструменту.
+  bool weekend_flag = 29; //Флаг отображающий доступность торговли инструментом по выходным.
+  bool liquidity_flag = 30; //Флаг достаточной ликвидности.
+  bool for_iis_flag = 31; //Возможность покупки/продажи на ИИС.
+  bool for_qual_investor_flag = 32; //Флаг отображающий доступность торговли инструментом только для квалифицированных инвесторов.
+  bool pawnshop_list_flag = 33; //Признак ФИ, включенного в ломбардный список.
+  RealExchange real_exchange = 34; //Реальная площадка исполнения расчётов.
+  google.protobuf.Timestamp first_1min_candle_date = 35; //Дата первой минутной свечи.
+  google.protobuf.Timestamp first_1day_candle_date = 36; //Дата первой дневной свечи.
+  string borrow_name = 37; //Название заемщика.
+  string type = 38; //Тип структурной ноты.
+  LogicPortfolio logic_portfolio = 39; //Стратегия портфеля.
+  AssetType asset_type = 40; //Тип базового актива.
+  repeated BasicAsset basic_assets = 41; //Базовые активы, входящие в ноту.
+  Quotation safety_barrier = 42; //Барьер сохранности (в процентах).
+  string coupon_period_base = 43; //Базис расчета НКД.
+  ObservationPrinciple observation_principle = 44; //Принцип наблюдений.
+  string observation_frequency = 45; //Частота наблюдений.
+  google.protobuf.Timestamp initial_price_fixing_date = 46; //Дата фиксации цен базовых активов.
+  repeated Yield yield = 47; //Доходность по ноте в годовом выражении.
+  bool coupon_saving_flag = 48; //Признак сохранения купонов.
+  string sector = 49; //Сектор экономики.
+  string country_of_risk = 50; //Код страны рисков.
+  string country_of_risk_name = 51; //Наименование страны рисков.
+  string logo_name = 52; //Имя файла логотипа эмитента.
+  repeated string required_tests = 53; //Тесты, которые необходимо пройти клиенту, чтобы совершать покупки по бумаге.
+
+  //Базовый актив.
+  message BasicAsset {
+    string uid = 1; //Уникальный идентификатор базового актива.
+    AssetType type = 2; //Тип базового актива.
+    Quotation initial_price = 3; //Начальная цена базового актива.
+  }
+
+  //Доходность.
+  message Yield {
+    YieldType type = 1; //Тип доходности.
+    Quotation value = 2; //Значение доходности.
+  }
+
+  //Стратегия портфеля.
+  enum LogicPortfolio {
+    LOGIC_PORTFOLIO_UNSPECIFIED = 0; //Стратегия портфеля не определена.
+    LOGIC_PORTFOLIO_VOLATILITY = 1; //Волатильность.
+    LOGIC_PORTFOLIO_CORRELATION = 2; //Корреляция.
+  }
+
+  //Принцип наблюдений.
+  enum ObservationPrinciple {
+    OBSERVATION_PRINCIPLE_UNSPECIFIED = 0; //Принцип наблюдений не определен.
+    OBSERVATION_PRINCIPLE_WORST_BASIC_ASSET = 1; //По худшему базовому активу.
+    OBSERVATION_PRINCIPLE_BEST_BASIC_ASSET = 2; //По лучшему базовому активу.
+    OBSERVATION_PRINCIPLE_AVERAGE_OF_BASIC_ASSETS = 3; //Среднее значение по базовым активам.
+    OBSERVATION_PRINCIPLE_SINGLE_BASIC_ASSET_PERFORMANCE = 4; //Динамика актива (только если у ноты один базовый актив).
+  }
+
+  //Тип доходности.
+  enum YieldType {
+    YIELD_TYPE_UNSPECIFIED = 0; //Тип доходности не определен.
+    YIELD_TYPE_GUARANTED_COUPON = 1; //Гарантированный купон.
+    YIELD_TYPE_CONDITIONAL_COUPON = 2; //Условный купон.
+    YIELD_TYPE_PARTICIPATION = 3; //Участие в росте.
+  }
 }
 
 //Запрос НКД по облигации.
@@ -750,8 +888,8 @@ message Instrument {
   int32 lot = 5; //Лотность инструмента. Возможно совершение операций только на количества ценной бумаги, кратные параметру `lot`. [Подробнее](./glossary#lot).
   string currency = 6; //Валюта расчетов.
 
-  Quotation klong = 7; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
-  Quotation kshort = 8; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation klong = 7 [deprecated = true]; //Коэффициент ставки риска длинной позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
+  Quotation kshort = 8 [deprecated = true]; //Коэффициент ставки риска короткой позиции по клиенту. 2 – клиент со стандартным уровнем риска (КСУР); 1 – клиент с повышенным уровнем риска (КПУР).
   Quotation dlong = 9; //Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dshort = 10; //Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
   Quotation dlong_min = 11; //Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
@@ -775,6 +913,8 @@ message Instrument {
   RealExchange real_exchange = 26; //Реальная площадка исполнения расчетов (биржа).
   string position_uid = 27; //Уникальный идентификатор позиции инструмента.
   string asset_uid = 28; //Уникальный идентификатор актива.
+
+  repeated string required_tests = 29; //Тесты, которые необходимо пройти клиенту, чтобы совершать сделки по инструменту.
 
   bool for_iis_flag = 36; //Признак доступности для ИИС.
   bool for_qual_investor_flag = 37; //Флаг, отображающий доступность торговли инструментом только для квалифицированных инвесторов.
@@ -1052,11 +1192,13 @@ message InstrumentLink {
 
 //Запрос списка избранных инструментов, входные параметры не требуются.
 message GetFavoritesRequest {
+  optional string group_id = 1; //Уникальный идентификатор группы.
 }
 
 //В ответ передается список избранных инструментов в качестве массива.
 message GetFavoritesResponse {
   repeated FavoriteInstrument favorite_instruments = 1; //Массив инструментов.
+  optional string group_id = 2; //Уникальный идентификатор группы.
 }
 
 //Массив избранных инструментов.
@@ -1077,6 +1219,7 @@ message FavoriteInstrument {
 message EditFavoritesRequest {
   repeated EditFavoritesRequestInstrument instruments = 1 [(google.api.field_behavior) = REQUIRED]; //Массив инструментов.
   EditFavoritesActionType action_type = 6 [(google.api.field_behavior) = REQUIRED]; //Тип действия со списком.
+  optional string group_id = 7; //Уникальный идентификатор группы.
 }
 
 //Массив инструментов для редактирования списка избранных инструментов.
@@ -1095,15 +1238,47 @@ enum EditFavoritesActionType {
 //Результат редактирования списка избранных инструментов.
 message EditFavoritesResponse {
   repeated FavoriteInstrument favorite_instruments = 1; //Массив инструментов.
+  optional string group_id = 2; //Уникальный идентификатор группы.
 }
 
-//Реальная площадка исполнения расчетов.
-enum RealExchange {
-  REAL_EXCHANGE_UNSPECIFIED = 0; //Тип не определен.
-  REAL_EXCHANGE_MOEX = 1; //Московская биржа.
-  REAL_EXCHANGE_RTS = 2; //Санкт-Петербургская биржа.
-  REAL_EXCHANGE_OTC = 3; //Внебиржевой инструмент.
-  REAL_EXCHANGE_DEALER = 4; //Инструмент, торгуемый на площадке брокера.
+//Запрос создания новой группы избранных инструментов.
+message CreateFavoriteGroupRequest {
+  string group_name = 1 [(google.api.field_behavior) = REQUIRED]; //Название группы, не более 255 символов.
+  string group_color = 2 [(google.api.field_behavior) = REQUIRED]; //Цвет группы. Принимает значения в HEX-формате, от "000000" до "FFFFFF"
+  optional string note = 3; //Описание
+}
+
+message CreateFavoriteGroupResponse {
+  string group_id = 1; //Уникальный идентификатор группы.
+  string group_name = 2; //Название группы.
+}
+
+//Запрос удаления избранной группы
+message DeleteFavoriteGroupRequest {
+  string group_id = 1 [(google.api.field_behavior) = REQUIRED]; //Уникальный идентификатор группы.
+}
+
+message DeleteFavoriteGroupResponse {
+}
+
+//Запрос получения списка избранных групп
+message GetFavoriteGroupsRequest {
+  repeated string instrument_id = 1; //Массив идентификаторов инструментов. Принимает значение `figi` или `instrument_uid`. Если в группе будет хотя бы один из инструментов массива, то в ответе у группы вернется признак `containsInstrument = true`.
+  repeated string excluded_group_id = 2; //Массив идентификаторов групп, которые необходимо исключить из ответа.
+}
+
+//Избранные группы
+message GetFavoriteGroupsResponse {
+  repeated FavoriteGroup groups = 1; //Массив групп избранных списков инструментов.
+
+  //Избранная группа
+  message FavoriteGroup {
+    string group_id = 1 [(google.api.field_behavior) = REQUIRED]; //Уникальный идентификатор группы.
+    string group_name = 2 [(google.api.field_behavior) = REQUIRED]; //Название группы.
+    string color = 3 [(google.api.field_behavior) = REQUIRED]; //Цвет группы в HEX-формате.
+    int32 size = 4 [(google.api.field_behavior) = REQUIRED]; //Количество инструментов в группе.
+    optional bool contains_instrument = 5; //Признак наличия в группе хотя бы одного инструмента из запроса.
+  }
 }
 
 //Запрос справочника стран.
@@ -1286,10 +1461,10 @@ message GetAssetReportsResponse {
   }
 
   enum AssetReportPeriodType {
-     PERIOD_TYPE_UNSPECIFIED = 0; // Не указан.
-     PERIOD_TYPE_QUARTER = 1; // Квартальный.
-     PERIOD_TYPE_SEMIANNUAL = 2; // Полугодовой.
-     PERIOD_TYPE_ANNUAL = 3; // Годовой.
+    PERIOD_TYPE_UNSPECIFIED = 0; // Не указан.
+    PERIOD_TYPE_QUARTER = 1; // Квартальный.
+    PERIOD_TYPE_SEMIANNUAL = 2; // Полугодовой.
+    PERIOD_TYPE_ANNUAL = 3; // Годовой.
   }
 }
 
@@ -1307,12 +1482,12 @@ message GetConsensusForecastsResponse {
   message ConsensusForecastsItem {
     string uid = 1; // UID-идентификатор.
     string asset_uid = 2; // UID-идентификатор актива.
-    google.protobuf.Timestamp	created_at = 3; // Дата и время создания записи.
+    google.protobuf.Timestamp  created_at = 3; // Дата и время создания записи.
     Quotation best_target_price = 4; // Целевая цена на 12 месяцев.
     Quotation best_target_low = 5; // Минимальная прогнозная цена.
     Quotation best_target_high = 6; // Максимальная прогнозная цена.
-    int32 total_buy_recommend	= 7; // Количество аналитиков рекомендующих покупать.
-    int32 total_hold_recommend = 8;	// Количество аналитиков рекомендующих держать.
+    int32 total_buy_recommend = 7; // Количество аналитиков рекомендующих покупать.
+    int32 total_hold_recommend = 8;  // Количество аналитиков рекомендующих держать.
     int32 total_sell_recommend = 9; // Количество аналитиков рекомендующих продавать.
     string currency = 10; // Валюта прогнозов инструмента.
     Recommendation consensus = 11; // Консенсус-прогноз.
@@ -1368,6 +1543,31 @@ message GetForecastResponse {
   }
 }
 
+
+//Запрос ставок риска
+message RiskRatesRequest {
+  repeated string instrument_id = 1;  // Идентификаторы инструментов.
+}
+
+
+//Ставки риска
+message RiskRatesResponse {
+  repeated RiskRateResult instrument_risk_rates = 1;
+
+  message RiskRateResult {
+    string instrument_uid = 1;
+    optional RiskRate short_risk_rate = 2; // Ставка риска пользователя  в шорт
+    optional RiskRate long_risk_rate = 3; // Ставка риска пользователя в лонг
+    repeated RiskRate short_risk_rates = 5; //Доступные ставки риска в шорт
+    repeated RiskRate long_risk_rates = 6; //Доступные ставки риска в лонг
+    optional string error = 9; // Ошибка.
+  }
+  message RiskRate {
+    string risk_level_code = 2; // Категория риска.
+    Quotation value = 5; // Значение ставки риска.
+  }
+}
+
 message TradingInterval {
   string type = 1; //Название интервала.
   TimeInterval interval = 2; //Интервал.
@@ -1375,6 +1575,45 @@ message TradingInterval {
   message TimeInterval {
     google.protobuf.Timestamp start_ts = 1; // Время начала интервала.
     google.protobuf.Timestamp end_ts = 2; // Время окончания интервала.
+  }
+}
+
+
+//Запрос сделок по инсайдерам
+message GetInsiderDealsRequest {
+  string instrument_id = 1;
+  int32 limit = 2;
+  optional string next_cursor = 3;
+}
+
+//сделки инсайдеров
+message GetInsiderDealsResponse {
+
+  repeated InsiderDeal insider_deals = 1; // Массив сделок.
+  optional string next_cursor = 2; // Курсор для получения следующей страницы.
+
+  message InsiderDeal {
+    int64 trade_id = 1; // Уникальный идентификатор сделки.
+    TradeDirection direction = 2; // Направление сделки.
+    string currency = 3; // Валюта сделки.
+    google.protobuf.Timestamp date = 4; // Дата сделки.
+    int64 quantity = 5; // Количество.
+    Quotation price = 6; // Цена.
+    string instrument_uid = 7; // Уникальный идентификатор инструмента.
+    string ticker = 8; // Тикер инструмента.
+    string investor_name = 9; // Имя инвестора.
+    string investor_position = 10; // Какое отношение покупатель/продавец имеет к эмитенту
+    float percentage = 11; // Купленный/проданный объём от общего количества ценных бумаг на рынке
+    bool is_option_execution = 12; //Признак является ли сделка реализацией опциона
+    google.protobuf.Timestamp  disclosure_date = 13; // Дата раскрытия сделки.
+  }
+
+  enum TradeDirection {
+    TRADE_DIRECTION_UNSPECIFIED = 0; // Не определено.
+    TRADE_DIRECTION_BUY = 1; // Покупка.
+    TRADE_DIRECTION_SELL = 2; // Продажа.
+    TRADE_DIRECTION_INCREASE = 3; // Увеличение доли.
+    TRADE_DIRECTION_DECREASE = 4; // Уменьшение доли.
   }
 }
 

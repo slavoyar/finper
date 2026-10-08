@@ -1,7 +1,7 @@
 import { PrismaService } from '@common/prisma/prisma.service';
-import { BondPresetDto } from '@finper/shared';
+import { asCoupons, type CouponJson, type LastPriceJson } from '@common/utils';
 import { Injectable, Logger } from '@nestjs/common';
-import { Bond, Coupon, LastPrice } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class BondService {
@@ -80,48 +80,12 @@ export class BondService {
     });
   }
 
-  public getFilteredBonds(
-    preset: Pick<BondPresetDto, 'minDuration' | 'maxDuration' | 'riskLevels' | 'count'>
-  ) {
-    const { minDuration, maxDuration, riskLevels } = preset;
-
-    const getDate = (duration?: number) => {
-      if (!duration) {
-        return undefined;
-      }
-      return new Date(Date.now() + duration * (365.25 / 12) * 24 * 60 * 60 * 1000);
-    };
-
-    return this.prismaService.bond.findMany({
-      where: {
-        AND: [
-          {
-            NOT: {
-              amortizationFlag: true,
-            },
-          },
-          {
-            maturityDate: {
-              gte: getDate(minDuration),
-              lte: getDate(maxDuration),
-            },
-          },
-          riskLevels.length > 0 ? { riskLevel: { in: riskLevels } } : {},
-        ],
-      },
-      orderBy: {
-        yield: 'desc',
-      },
-      take: preset.count,
-    });
-  }
-
-  public async updateOrInsertBonds(bonds: Omit<Bond, 'id'>[]) {
+  public async updateOrInsertBonds(bonds: Prisma.BondCreateInput[]) {
     // build tasks (functions) so DB calls start per-batch
     const tasks = bonds.map(
       (bond) => () =>
         this.prismaService.bond.upsert({
-          where: { uid: bond.uid },
+          where: { uid: bond.uid ?? '' },
           update: { ...bond, coupons: undefined, lastPrice: undefined },
           create: bond,
         })
@@ -130,7 +94,7 @@ export class BondService {
     await this.runAllSettledBatched(tasks, 50, 'updateOrInsertBonds');
   }
 
-  public async fillCoupons(couponsPerBond: { uid: string; coupons: Coupon[] }[]) {
+  public async fillCoupons(couponsPerBond: { uid: string; coupons: CouponJson[] }[]) {
     const tasks = couponsPerBond.map(
       ({ uid, coupons }) =>
         () =>
@@ -149,11 +113,12 @@ export class BondService {
     const bonds = await this.getBonds();
     const tasks = bonds
       .map((bond) => {
-        const updateCoupons = bond.coupons.filter((coupon) => {
-          return coupon.couponEndDate && coupon.couponEndDate > new Date();
+        const coupons = asCoupons(bond.coupons);
+        const updateCoupons = coupons.filter((coupon) => {
+          return coupon.couponEndDate && new Date(coupon.couponEndDate) > new Date();
         });
 
-        if (updateCoupons.length !== bond.coupons.length) {
+        if (updateCoupons.length !== coupons.length) {
           return () =>
             this.prismaService.bond.update({
               where: { uid: bond.uid },
@@ -169,7 +134,7 @@ export class BondService {
     await this.runAllSettledBatched(tasks, 50, 'updateCoupons');
   }
 
-  public async updatePrices(prices: LastPrice[]) {
+  public async updatePrices(prices: LastPriceJson[]) {
     const tasks = prices
       .filter((price) => !!price.instrumentUid)
       .map(

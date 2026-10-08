@@ -1,44 +1,19 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { lastValueFrom } from 'rxjs';
-
-import { MessageResponse, Update } from './interfaces';
 
 @Injectable()
 export class TelegramService {
-  private readonly apiUrl: string;
+  constructor(private readonly configService: ConfigService) {}
 
-  constructor(
-    private readonly httpService: HttpService,
-    configService: ConfigService
-  ) {
-    this.apiUrl = `https://api.telegram.org/bot${configService.get('TELEGRAM_BOT_TOKEN')}`;
-  }
-
-  /**
-   * Get updates from Telegram using getUpdates endpoint.
-   * You can poll at regular intervals.
-   */
-  async getUpdates(offset?: number): Promise<Update[]> {
-    const url = `${this.apiUrl}/getUpdates`;
-    const params = offset ? { offset } : {};
-
-    const response = await lastValueFrom(
-      this.httpService.get<{ ok: boolean; result: Update[]; description: string }>(url, { params })
-    );
-    if (!response.data.ok) {
-      throw new Error(response.data.description);
+  async sendMessage(chatId: number, text: string): Promise<void> {
+    const token = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text }),
+    });
+    if (!response.ok) {
+      throw new Error(`Telegram sendMessage failed: ${response.status}`);
     }
-    return response.data.result;
-  }
-
-  /**
-   * Send message to a specific chat.
-   */
-  async sendMessage(message: MessageResponse): Promise<void> {
-    const url = `${this.apiUrl}/sendMessage`;
-
-    await lastValueFrom(this.httpService.post(url, message));
   }
 }
